@@ -24,17 +24,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.nawawia.domain.model.Hadith
 import com.nawawia.domain.text.ArabicNormalizer
 import com.nawawia.ui.theme.NawawiaTheme
-import com.nawawia.ui.theme.NotoNaskhArabicFontFamily
 
 /**
  * Sacred-text surface (Section 5.6 #7):
@@ -53,8 +54,9 @@ fun MatnCard(
 ) {
     val colors = NawawiaTheme.colors
     val customType = NawawiaTheme.customTypography
-    val shape = RoundedCornerShape(20.dp)
-    val borderWidth = if (colors.isDark) 1.dp else 2.dp
+    // كتلة المتن ليست بطاقة: لا إطار كامل ولا استدارة ٢٠dp كبقية العناصر.
+    // هي كتلة مسطورة على هامش مُذهَّب — كما يُفرد المتن في المخطوط عن حواشيه.
+    val shape = RoundedCornerShape(3.dp)
 
     val displayMatn = if (showTashkeel) {
         hadith.matnAr
@@ -63,14 +65,23 @@ fun MatnCard(
     }
 
     val matnTextStyle = if (useLargeFont) customType.matnLarge else customType.matn
+    val goldEdge = colors.gold
 
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(shape)
-            .background(colors.surface, shape)
-            .border(borderWidth, colors.outline, shape)
-            .padding(24.dp)
+            .background(colors.surfaceAlt, shape)
+            .drawBehind {
+                // هامش التذهيب على جانب البدء (اليمين في RTL).
+                val w = 3.dp.toPx()
+                drawRect(
+                    color = goldEdge,
+                    topLeft = Offset(size.width - w, 0f),
+                    size = Size(w, size.height)
+                )
+            }
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 18.dp)
             .testTag("matn_card_${hadith.id}")
             .semantics(mergeDescendants = false) {
                 contentDescription = "متن الحديث: ${hadith.titleAr}"
@@ -80,13 +91,10 @@ fun MatnCard(
         if (hadith.narratorAr.isNotBlank()) {
             Text(
                 text = hadith.narratorAr,
-                style = matnTextStyle.copy(
-                    fontFamily = NotoNaskhArabicFontFamily,
-                    fontWeight = FontWeight.Bold
-                ),
+                style = customType.narrator,
                 color = colors.inkMuted
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
         }
 
         // Sacred Matn text — never truncated, never ellipsized, selectable
@@ -102,15 +110,15 @@ fun MatnCard(
             )
         }
 
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(14.dp))
         HorizontalDivider(thickness = 1.dp, color = colors.outline)
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        // Mandatory Takhrij line (never omitted)
+        // التخريج لا يُحذف أبدًا، ويُرسم بحِبر الترقيم كما في المخطوط.
         Text(
-            text = "التخريج: ${hadith.takhrij.textAr}",
+            text = hadith.takhrij.textAr,
             style = customType.takhrij,
-            color = colors.inkMuted,
+            color = colors.rubric,
             modifier = Modifier.testTag("takhrij_line")
         )
 

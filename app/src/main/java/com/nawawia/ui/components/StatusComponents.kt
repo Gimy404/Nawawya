@@ -148,6 +148,7 @@ fun StreakFlame(
 @Composable
 fun XpPill(
     totalXp: Int,
+    onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val colors = NawawiaTheme.colors
@@ -158,6 +159,7 @@ fun XpPill(
         modifier = modifier
             .defaultMinSize(minHeight = 48.dp)
             .clip(shape)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .background(colors.brandSoft, shape)
             .border(1.5.dp, colors.brand, shape)
             .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -192,6 +194,7 @@ fun TopGameBar(
     heartsCount: Int,
     onStreakClick: () -> Unit,
     onHeartsClick: () -> Unit,
+    onXpClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val colors = NawawiaTheme.colors
@@ -207,7 +210,7 @@ fun TopGameBar(
             streakDays = streakDays,
             onClick = onStreakClick
         )
-        XpPill(totalXp = totalXp)
+        XpPill(totalXp = totalXp, onClick = onXpClick)
         HeartBar(
             heartsCount = heartsCount,
             onClick = onHeartsClick

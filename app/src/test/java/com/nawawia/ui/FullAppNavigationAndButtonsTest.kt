@@ -47,51 +47,38 @@ class FullAppNavigationAndButtonsTest {
     }
 
     @Test
-    fun test01_allHeroHomeButtonsAndAllFourBottomNavigationTabsWork() {
+    fun test01_pathSingleCallToActionAndAllFourBottomNavigationTabsWork() {
         val vm = createTestViewModel()
         composeTestRule.setContent {
             NawawiaAppRoot(viewModel = vm)
         }
         composeTestRule.waitForIdle()
 
-        // Verify PathScreen is initially displayed
         composeTestRule.onNodeWithTag("path_screen").assertIsDisplayed()
 
-        // 1. Click "ابدأ التعلم" (start_learning_button) -> must open HadithReaderScreen for Hadith 1
+        // شاشة الطريق صار فيها نداء واحد: الخاتم النشط.
+        // وقد حُذف «ابدأ التعلم» و«تابع من هنا» الثابت (كانا يستدعيان نفس الدالة
+        // حرفيًا)، و«المراجعة السريعة» و«تصفح الأحاديث» (كانا يكرّران تبويبين في
+        // الشريط السفلي). والتبويبان هما الطريق الصحيح إليهما.
         composeTestRule.onNodeWithTag("start_learning_button").performScrollTo().performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("hadith_reader_screen").assertIsDisplayed()
         assertThat(vm.uiState.value.activeModal).isEqualTo(ModalScreen.Reader("h1"))
 
-        // Click Back on Reader -> returns to PathScreen
         composeTestRule.onNodeWithTag("reader_back_button").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("path_screen").assertIsDisplayed()
 
-        // 2. Click "المراجعة السريعة (١٠ دقائق)" (quick_review_home_button) -> must open LessonScreen
-        composeTestRule.onNodeWithTag("quick_review_home_button").performScrollTo().performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("lesson_screen").assertIsDisplayed()
-        assertThat(vm.uiState.value.activeLesson?.isReviewMode).isTrue()
-
-        // Click Close on Lesson -> opens confirmation dialog -> confirm exit
-        composeTestRule.onNodeWithTag("lesson_close_button").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("exit_lesson_dialog").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("exit_lesson_confirm_yes").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("path_screen").assertIsDisplayed()
-
-        // 3. Click "تصفح الأحاديث" (browse_hadiths_home_button) -> must navigate to IndexScreen
-        composeTestRule.onNodeWithTag("browse_hadiths_home_button").performScrollTo().performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("index_screen").assertIsDisplayed()
-        assertThat(vm.uiState.value.activeTab).isEqualTo(BottomNavTab.INDEX)
-
-        // 4. Click all 4 Bottom Navigation Tabs (الطريق, المراجعة, الأحاديث, حسابي)
+        // المراجعة عبر تبويبها، لا عبر زِرّ مكرّر في الطريق.
         composeTestRule.onNodeWithTag("nav_tab_review").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("review_screen").assertIsDisplayed()
+
+        // الفهرس عبر تبويبه.
+        composeTestRule.onNodeWithTag("nav_tab_index").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("index_screen").assertIsDisplayed()
+        assertThat(vm.uiState.value.activeTab).isEqualTo(BottomNavTab.INDEX)
 
         composeTestRule.onNodeWithTag("nav_tab_profile").performClick()
         composeTestRule.waitForIdle()
@@ -100,11 +87,6 @@ class FullAppNavigationAndButtonsTest {
         composeTestRule.onNodeWithTag("nav_tab_path").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("path_screen").assertIsDisplayed()
-
-        // 5. Click sticky "تابع من هنا" CTA -> opens Reader
-        composeTestRule.onNodeWithTag("continue_here_fab_button").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("hadith_reader_screen").assertIsDisplayed()
     }
 
     @Test
@@ -143,29 +125,24 @@ class FullAppNavigationAndButtonsTest {
         composeTestRule.onNodeWithTag("reader_copy_button").performClick()
         composeTestRule.waitForIdle()
 
-        // Scroll to Audio Player Bar inside reader_content_list and test all controls
+        // ── الصوت ───────────────────────────────────────────────────────
+        // لا تسجيلات بشرية مضمّنة في المستودع بعد (تنتظر إذن النشر من المصدر).
+        // وقد حُذف محرّك النطق الآلي ومولّد النبرات، فالسلوك الصحيح الآن هو
+        // **إعلان صريح بغياب التسجيل**، لا تشغيل بديل مزيّف.
+        //
+        // الاختبار السابق كان يمرّ لأن `isAudioFileAvailable` كان افتراضه `true`
+        // بينما `assets/audio/` غير موجود أصلًا — أي أنه كان يُثبّت سلوكًا كاذبًا.
         composeTestRule.onNodeWithTag("reader_content_list").performScrollToKey("audio_bar")
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithTag("audio_play_pause_button").performClick()
-        composeTestRule.waitForIdle()
-        assertThat(vm.audioState.value.isPlaying).isTrue()
+        assertThat(vm.audioState.value.isAudioFileAvailable).isFalse()
+        composeTestRule.onNodeWithTag("audio_missing_label").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("audio_retry_button").assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("audio_speed_button").performClick()
+        // ولا يُشغَّل شيء مهما ضُغط.
+        composeTestRule.onNodeWithTag("audio_retry_button").performClick()
         composeTestRule.waitForIdle()
-        assertThat(vm.audioState.value.speed.multiplier).isEqualTo(1.25f)
-
-        composeTestRule.onNodeWithTag("audio_ab_loop_button").performClick() // Set Point A
-        composeTestRule.waitForIdle()
-        assertThat(vm.audioState.value.pointAFraction).isNotNull()
-
-        composeTestRule.onNodeWithTag("audio_ab_loop_button").performClick() // Set Point B
-        composeTestRule.waitForIdle()
-        assertThat(vm.audioState.value.isAbLoopActive).isTrue()
-
-        composeTestRule.onNodeWithTag("audio_repeat_button").performClick()
-        composeTestRule.waitForIdle()
-        assertThat(vm.audioState.value.repeatMode.count).isEqualTo(3)
+        assertThat(vm.audioState.value.isPlaying).isFalse()
 
         // Click "ابدأ الاختبار" -> launches LessonScreen
         composeTestRule.onNodeWithTag("start_quiz_button").performClick()

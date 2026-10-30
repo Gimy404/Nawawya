@@ -291,13 +291,10 @@ fun NawawiaAppRoot(
                                 BottomNavTab.PATH -> {
                                     PathScreen(
                                         state = state,
-                                        onStartLearningClick = viewModel::onContinueLearningClick,
-                                        onQuickReviewClick = viewModel::onQuickReviewFromHomeClick,
-                                        onBrowseHadithsClick = viewModel::onBrowseHadithsFromHomeClick,
                                         onNodeClick = viewModel::onNodeClick,
-                                        onUnitStartClick = viewModel::onUnitStartClick,
                                         onStreakClick = viewModel::openStatusDialog,
-                                        onHeartsClick = viewModel::openStatusDialog
+                                        onHeartsClick = viewModel::openStatusDialog,
+                                        onXpClick = viewModel::openStatusDialog
                                     )
                                 }
 

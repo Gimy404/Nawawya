@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#0F6E56</color>
-    <color name="brand_emerald">#0F6E56</color>
-    <color name="gold_accent">#D97706</color>
-    <color name="parchment_bg">#FAF7F0</color>
+    <!-- أصباغ المخطوط — مطابقة لـ ui/theme/Color.kt -->
+    <color name="nawawia_lapis">#1B3C86</color>
+    <color name="nawawia_gold">#D9A43C</color>
+    <color name="nawawia_vellum">#F3F1EA</color>
+    <color name="nawawia_indigo">#0D1328</color>
+    <color name="nawawia_ink">#241E16</color>
+
+    <!-- خلفية الأيقونة المتكيّفة: لازَوَرْد، لا الأخضر الذي يشترك فيه كل تطبيقات الفئة -->
+    <color name="ic_launcher_background">#1B3C86</color>
 </resources>

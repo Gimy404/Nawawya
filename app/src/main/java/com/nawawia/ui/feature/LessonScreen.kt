@@ -54,6 +54,7 @@ import com.nawawia.ui.components.ChunkyButtonSize
 import com.nawawia.ui.components.ChunkyButtonVariant
 import com.nawawia.ui.components.HeartBar
 import com.nawawia.ui.components.SharhLinkRow
+import com.nawawia.domain.voice.NawawiaVoice
 import com.nawawia.ui.theme.NawawiaTheme
 
 @Composable
@@ -173,10 +174,16 @@ fun LessonScreen(
                 )
             }
 
+            // الزِرّ لا يُعرض إلا إذا وُجد تسجيل بشري فعلًا. وكان يُعرض دائمًا
+            // بينما `assets/audio/` غير موجود أصلًا، فكان زرًّا ميتًا في كل سؤال.
             item(key = "audio_prompt_button") {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (audioState.isAudioFileAvailable) {
                     ChunkyButton(
-                        label = if (audioState.isPlaying) "إيقاف التلاوة الصوتية (${audioState.formattedTimeAr})" else "استمع للمقطع الصوتي للحديث",
+                        label = if (audioState.isPlaying) {
+                            "أوقِف الاستماع (${audioState.formattedTimeAr})"
+                        } else {
+                            "استمع إلى الحديث"
+                        },
                         leadingIcon = Icons.Default.VolumeUp,
                         onClick = onPlayAudioPrompt,
                         variant = if (audioState.isPlaying) ChunkyButtonVariant.Gold else ChunkyButtonVariant.Tonal,
@@ -185,23 +192,6 @@ fun LessonScreen(
                             .fillMaxWidth()
                             .testTag("lesson_play_audio_prompt")
                     )
-                    if (audioState.isPlaying && audioState.activeSegmentTextAr.isNotBlank()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(colors.brandSoft, RoundedCornerShape(12.dp))
-                                .border(1.dp, colors.brand, RoundedCornerShape(12.dp))
-                                .padding(12.dp)
-                                .testTag("lesson_active_audio_excerpt")
-                        ) {
-                            Text(
-                                text = "🔊 جاري تلاوة الحديث الشريف…",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = colors.brand
-                            )
-                        }
-                    }
                 }
             }
 
@@ -274,7 +264,7 @@ fun LessonScreen(
                 .background(
                     when {
                         !lesson.isAnswerRevealed -> colors.surface
-                        lesson.isCurrentAnswerCorrect -> colors.brandSoft
+                        lesson.isCurrentAnswerCorrect -> colors.correctSoft
                         else -> colors.wrongSoft
                     }
                 )
@@ -288,17 +278,33 @@ fun LessonScreen(
                     Icon(
                         imageVector = if (lesson.isCurrentAnswerCorrect) Icons.Default.CheckCircle else Icons.Default.Close,
                         contentDescription = null,
-                        tint = if (lesson.isCurrentAnswerCorrect) colors.brand else colors.wrong,
+                        tint = if (lesson.isCurrentAnswerCorrect) colors.correct else colors.wrong,
                         modifier = Modifier.size(28.dp)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Column(modifier = Modifier.weight(1f)) {
+                        // كان هنا نصّان ثابتان «صحيح» و«غير صحيح» إلى الأبد، وكان
+                        // `feedbackTextAr` يُحسب في الـ ViewModel ولا يُقرأ هنا أبدًا.
                         Text(
-                            text = if (lesson.isCurrentAnswerCorrect) "صحيح" else "غير صحيح",
+                            text = if (lesson.isCurrentAnswerCorrect) {
+                                lesson.feedbackTextAr.ifBlank { "ضبطتَها" }
+                            } else {
+                                NawawiaVoice.wrongHeadline(
+                                    correctTextAr = correctAnswerTextFor(currentQuestion),
+                                    seed = lesson.seed + lesson.currentIndex
+                                )
+                            },
                             style = MaterialTheme.typography.titleLarge,
-                            color = if (lesson.isCurrentAnswerCorrect) colors.brand else colors.wrong,
+                            color = if (lesson.isCurrentAnswerCorrect) colors.correct else colors.wrong,
                             modifier = Modifier.testTag("lesson_feedback_title")
                         )
+                        if (!lesson.isCurrentAnswerCorrect && lesson.feedbackTextAr.isNotBlank()) {
+                            Text(
+                                text = lesson.feedbackTextAr,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = colors.inkMuted
+                            )
+                        }
                         if (!currentQuestion.explanationAr.isNullOrBlank()) {
                             Text(
                                 text = currentQuestion.explanationAr,
@@ -320,9 +326,10 @@ fun LessonScreen(
                 Spacer(modifier = Modifier.height(14.dp))
 
                 ChunkyButton(
-                    label = "متابعة",
+                    label = "واصِل",
                     onClick = onContinueClick,
                     variant = if (lesson.isCurrentAnswerCorrect) ChunkyButtonVariant.Primary else ChunkyButtonVariant.Danger,
+                    // «واصِل» لا «متابعة»: فعل أمر قصير بصوت معلّم.
                     size = ChunkyButtonSize.Large,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -330,7 +337,7 @@ fun LessonScreen(
                 )
             } else {
                 ChunkyButton(
-                    label = "تحقّق",
+                    label = "تحقَّق",
                     onClick = onCheckAnswerClick,
                     enabled = lesson.canCheckAnswer,
                     variant = ChunkyButtonVariant.Primary,
@@ -342,6 +349,16 @@ fun LessonScreen(
             }
         }
     }
+}
+
+/**
+ * اللفظ الصحيح كما يُعرض في سطر الخطأ.
+ * عند الخطأ نُظهر **اللفظ أولًا** ثم نطمئن — لا نُعطي تعليمات تشغيل.
+ */
+private fun correctAnswerTextFor(question: Question): String = when (question.type) {
+    QuestionType.ORDER_PHRASES -> question.orderedPhrases.joinToString(" … ")
+    QuestionType.MATCH_PAIRS -> "راجِع المطابقة بالأعلى"
+    else -> question.options.firstOrNull { it.correct }?.textAr.orEmpty()
 }
 
 /**

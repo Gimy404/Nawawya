@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نواوية — المَشكاة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   نواوية — نظام «المَشكاة»
+   أصباغ المخطوط: لازَوَرْد · ذَهَب · زِنْجَفْر · زَنْجار · عَفْص · رَق · نِيل
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  /* رَق — vellum */
+  --bg:#F3F1EA;
+  --surface:#FAF8F2;
+  --inset:#EDE9DD;
+  /* عَفْص — iron-gall ink (brown-black, never grey-black) */
+  --ink:#241E16;
+  --ink-mute:#6B6054;
+  --rule:#D8D1C2;
+  --rule-soft:#E7E1D4;
+  /* لازَوَرْد — lapis lazuli: the identity */
+  --lapis:#1B3C86;
+  --lapis-deep:#142C63;
+  --lapis-soft:#E3E8F6;
+  --on-lapis:#FFFFFF;
+  /* ذَهَب — gold leaf */
+  --gold:#A9761B;
+  --gold-ink:#8A5F12;      /* small text: 4.99:1 on vellum */
+  --gold-bright:#D9A43C;
+  --gold-soft:#F6EBD3;
+  --on-gold:#2A1D05;
+  /* زِنْجَفْر — vermillion: INK ONLY, never a background */
+  --verm:#B33018;
+  /* زَنْجار — verdigris: "correct" only, never identity */
+  --verd:#1C6F4C;
+  --verd-soft:#DDEEE5;
+  --on-verd:#FFFFFF;
+  --heart:#B33018;
+
+  /* ألوان العُنوان تبقى عميقة في الوضعين لأنها تحمل نصًّا أبيض */
+  --band-1:#1B3C86; --band-2:#7A5310; --band-3:#17603F;
+  --band-4:#5E2560; --band-5:#8A3C1C; --band-6:#6B571B;
+
+  --unit-1:#1B3C86;  /* لازَوَرْد */
+  --unit-2:#8A5F12;  /* ذَهَب */
+  --unit-3:#1C6F4C;  /* زَنْجار */
+  --unit-4:#6B2A6B;  /* أرجوان */
+  --unit-5:#9A4420;  /* طين محروق */
+  --unit-6:#7A6420;  /* رمل */
+
+  --lip:4px;
+  --ease:cubic-bezier(.23,1,.32,1);
+}
+[data-theme="dark"]{
+  /* نِيل — indigo night, not neutral black */
+  --bg:#0D1328;
+  --surface:#141B33;
+  --inset:#1B2342;
+  --ink:#F0EBE0;
+  --ink-mute:#9AA3BF;
+  --rule:#2A3254;
+  --rule-soft:#1E2642;
+  --lapis:#5B8AE6;
+  --lapis-deep:#3F6DC4;
+  --lapis-soft:#1A2545;
+  --on-lapis:#0A1024;
+  --gold:#E3B45A;
+  --gold-ink:#E3B45A;
+  --gold-bright:#F3CE84;
+  --gold-soft:#2A2415;
+  --on-gold:#1A1405;
+  --verm:#F2715A;
+  --verd:#49C68C;
+  --verd-soft:#11301F;
+  --on-verd:#06240F;
+  --heart:#F2715A;
+  --unit-1:#5B8AE6; --unit-2:#E3B45A; --unit-3:#49C68C;
+  --unit-4:#C58BC5; --unit-5:#E39070; --unit-6:#D4BE6A;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Readex Pro',system-ui,sans-serif;
+  font-weight:400;line-height:1.55;
+  padding:28px 16px 64px;
+}
+
+/* ── الخطوط: Amiri = من التراث · Readex = كلام التطبيق ─────────── */
+.naskh{font-family:'Amiri',serif}
+
+/* ── لوح العرض ──────────────────────────────────────────────────── */
+.wall{display:flex;flex-wrap:wrap;gap:40px 26px;justify-content:center;align-items:flex-start;max-width:1800px;margin:0 auto}
+.slot{width:412px;flex:0 0 auto}
+.slot > figcaption{
+  font-size:12.5px;font-weight:600;color:var(--ink-mute);
+  padding:0 2px 8px;display:flex;align-items:baseline;gap:7px;
+}
+.slot > figcaption b{color:var(--verm);font-weight:700;font-variant-numeric:tabular-nums}
+.phone{
+  width:412px;height:892px;background:var(--bg);color:var(--ink);
+  border:1px solid var(--rule);border-radius:30px;overflow:hidden;
+  position:relative;display:flex;flex-direction:column;
+  box-shadow:0 1px 0 var(--rule);
+}
+.phone.dk{--bg:#0D1328;--surface:#141B33;--inset:#1B2342;--ink:#F0EBE0;--ink-mute:#9AA3BF;
+  --rule:#2A3254;--rule-soft:#1E2642;--lapis:#5B8AE6;--lapis-deep:#3F6DC4;--lapis-soft:#1A2545;
+  --on-lapis:#0A1024;--gold:#E3B45A;--gold-ink:#E3B45A;--gold-bright:#F3CE84;--gold-soft:#2A2415;
+  --on-gold:#1A1405;--verm:#F2715A;--verd:#49C68C;--verd-soft:#11301F;--on-verd:#06240F;--heart:#F2715A;
+  --unit-1:#5B8AE6;--unit-2:#E3B45A;--unit-3:#49C68C;--unit-4:#C58BC5;--unit-5:#E39070;--unit-6:#D4BE6A;
+  background:#0D1328;color:#F0EBE0;border-color:#2A3254}
+.scroll{flex:1;overflow:hidden;position:relative}
+/* كل أيقونة بحجم افتراضي صغير؛ الكبيرة تتجاوزه بصفّها */
+.phone svg{width:18px;height:18px;flex:none}
+.phone .ring{width:84px;height:84px}
+.phone .lamp svg,.phone .wave svg,.phone .qalam svg{width:100%;height:auto}
+.phone .rseal{width:118px;height:118px}
+.opt .n svg{width:15px;height:15px}
+.pill svg{width:13px;height:13px}
+.vmark svg{width:21px;height:21px}
+.notif .app svg{width:20px;height:20px}
+
+/* ── شريط الحالة: شريط رقيق، لا بطاقة ──────────────────────────── */
+.strip{
+  display:flex;align-items:center;gap:16px;
+  padding:13px 16px 11px;border-bottom:1px solid var(--rule);
+  background:var(--surface);
+}
+.stat{display:flex;align-items:center;gap:5px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat svg{width:17px;height:17px;flex:none}
+.stat.xp{color:var(--lapis)}
+.stat.fire{color:var(--gold-ink)}
+.hearts{display:flex;gap:3px;margin-inline-start:auto}
+.hearts svg{width:16px;height:16px}
+.cog{width:30px;height:30px;display:grid;place-items:center;color:var(--ink-mute)}
+.cog svg{width:19px;height:19px}
+
+/* ── العُنوان المُذهَّب ('unwān) ─────────────────────────────────── */
+.unwan{
+  position:relative;margin:18px 14px 6px;padding:15px 16px 16px;
+  background:var(--uc);border-radius:3px;
+  isolation:isolate;overflow:hidden;
+}
+.unwan::before{ /* شبكة الگِرِه — نجمة ثمانية متشابكة */
+  content:"";position:absolute;inset:0;z-index:-1;opacity:.18;
+  background-size:34px 34px;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2234%22 height=%2234%22><g fill=%22none%22 stroke=%22white%22 stroke-width=%221%22><rect x=%227%22 y=%227%22 width=%2220%22 height=%2220%22/><rect x=%227%22 y=%227%22 width=%2220%22 height=%2220%22 transform=%22rotate(45 17 17)%22/></g></svg>');
+}
+.unwan::after{ /* gold hairline frame, inset — manuscript rule */
+  content:"";position:absolute;inset:5px;border:1px solid rgba(217,164,60,.55);
+  border-radius:1px;pointer-events:none;
+}
+.unwan-row{display:flex;align-items:center;gap:12px;position:relative}
+.cartouche{
+  flex:none;width:38px;height:38px;display:grid;place-items:center;
+  background:var(--gold-bright);color:#2A1D05;border-radius:50%;
+  font-family:'Amiri',serif;font-size:21px;font-weight:700;line-height:1;
+  box-shadow:inset 0 0 0 1px rgba(42,29,5,.35);
+}
+.unwan h2{
+  font-family:'Amiri',serif;font-size:23px;font-weight:700;line-height:1.3;
+  color:#fff;letter-spacing:0;text-shadow:0 1px 2px rgba(0,0,0,.28);
+}
+.unwan .meta{
+  font-size:11.5px;font-weight:500;color:rgba(255,255,255,.88);
+  margin-top:3px;letter-spacing:.2px;
+}
+.unwan .bar{
+  margin-top:11px;height:5px;border-radius:99px;
+  background:rgba(0,0,0,.26);overflow:hidden;position:relative;
+}
+.unwan .bar i{display:block;height:100%;background:var(--gold-bright);border-radius:99px}
+
+/* ── سلسلة الإسناد ─────────────────────────────────────────────── */
+.isnad{position:relative;padding:6px 0 10px}
+.isnad::before{ /* the ribbon, on the right (RTL reading spine) */
+  content:"";position:absolute;top:0;bottom:0;right:71px;width:3px;
+  background:
+    repeating-linear-gradient(to bottom,
+      var(--rule) 0 9px, transparent 9px 15px);
+}
+.link{position:relative;display:flex;align-items:center;gap:0;padding:7px 0;min-height:76px}
+
+/* الخاتم — the seal */
+.seal{
+  position:absolute;right:38px;width:70px;height:70px;flex:none;
+  display:grid;place-items:center;border-radius:50%;
+  font-family:'Amiri',serif;font-size:25px;font-weight:700;line-height:1;
+  border:2px solid var(--sc);color:var(--sc);background:var(--surface);
+  box-shadow:0 var(--lip) 0 var(--sl);
+}
+.seal::after{ /* inner manuscript ring */
+  content:"";position:absolute;inset:5px;border:1px solid var(--sc);
+  border-radius:50%;opacity:.35;
+}
+.seal.done{background:var(--gold-soft);--sc:var(--gold-ink);--sl:var(--gold)}
+.seal.done svg{width:26px;height:26px}
+.seal.now{
+  background:var(--lapis);color:var(--on-lapis);--sc:var(--lapis);--sl:var(--lapis-deep);
+  border-color:var(--lapis-deep);transform:scale(1.1);
+}
+.seal.now::after{border-color:rgba(255,255,255,.5);opacity:1}
+.seal.now::before{ /* gold aura marks the single call-to-action */
+  content:"";position:absolute;inset:-7px;border:2px solid var(--gold-bright);
+  border-radius:50%;opacity:.95;
+}
+.seal.lock{background:var(--inset);--sc:var(--rule);--sl:var(--rule-soft);color:var(--ink-mute)}
+.seal.lock svg{width:21px;height:21px}
+.seal.prog{--sc:var(--lapis);--sl:var(--lapis-deep);background:var(--lapis-soft);color:var(--lapis);border-width:1.5px}
+.ring{position:absolute;right:31px;transform:rotate(-90deg);pointer-events:none}
+
+/* الحاشية — marginal gloss */
+.gloss{display:flex;align-items:center;gap:9px;margin-inline-start:124px;margin-inline-end:18px;width:100%;min-width:0}
+.gloss .t{
+  font-family:'Amiri',serif;font-size:17.5px;font-weight:700;line-height:1.35;
+  color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.gloss.off .t{color:var(--ink-mute);font-weight:400}
+.gloss .lead{flex:1;min-width:12px;border-bottom:1px dotted var(--rule);height:1px;margin-bottom:4px}
+.gloss .pct{font-size:11px;font-weight:600;color:var(--gold-ink);font-variant-numeric:tabular-nums;flex:none}
+
+/* نداء البدء — the one CTA bubble */
+.gloss.col{flex-direction:column;align-items:flex-start;gap:7px}
+.cue{
+  position:relative;align-self:flex-start;
+  background:var(--lapis);color:var(--on-lapis);
+  padding:8px 15px 9px;border-radius:4px;
+  font-size:13.5px;font-weight:700;white-space:nowrap;
+  box-shadow:0 3px 0 var(--lapis-deep);
+}
+.cue::after{ /* سهم يشير إلى الخاتم على اليمين */
+  content:"";position:absolute;right:-6px;top:50%;margin-top:-5px;
+  border:5px solid transparent;border-left-color:var(--lapis);
+}
+.link.active{min-height:106px}
+
+/* مصباح الوحدة — the lamp */
+.lampwrap{display:flex;justify-content:center;padding:4px 0 16px;position:relative}
+.lamp{width:78px;height:92px;position:relative;z-index:2;background:var(--bg);padding:0 6px}
+.lamp svg{width:100%;height:100%;display:block}
+.lampcap{
+  position:absolute;bottom:-2px;right:50%;transform:translateX(50%);
+  font-size:11px;font-weight:600;color:var(--gold-ink);white-space:nowrap;
+}
+
+/* ── الأزرار ───────────────────────────────────────────────────── */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;min-height:54px;padding:14px 18px;border:0;border-radius:6px;
+  font-family:'Readex Pro',sans-serif;font-size:16px;font-weight:600;
+  background:var(--lapis);color:var(--on-lapis);
+  box-shadow:0 var(--lip) 0 var(--lapis-deep);
+  cursor:pointer;transition:transform .12s var(--ease),box-shadow .12s var(--ease);
+}
+.btn:active{transform:translateY(var(--lip));box-shadow:0 0 0 var(--lapis-deep)}
+.btn svg{width:19px;height:19px;flex:none}
+.btn.gold{background:var(--gold-bright);color:var(--on-gold);box-shadow:0 var(--lip) 0 var(--gold)}
+.btn.good{background:var(--verd);color:var(--on-verd);box-shadow:0 var(--lip) 0 #124A32}
+.btn.quiet{background:transparent;color:var(--lapis);box-shadow:none;border:1.5px solid var(--rule);min-height:50px}
+.btn.quiet:active{transform:none;background:var(--lapis-soft)}
+.btn.off{background:var(--inset);color:var(--ink-mute);box-shadow:0 var(--lip) 0 var(--rule-soft);cursor:not-allowed}
+.btn.off:active{transform:none;box-shadow:0 var(--lip) 0 var(--rule-soft)}
+.btn.sm{min-height:44px;font-size:14px;padding:10px 14px;--lip:3px}
+
+/* ── شريط الدرس: مَدّة قلم ─────────────────────────────────────── */
+.lessontop{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface);border-bottom:1px solid var(--rule)}
+.x{width:38px;height:38px;flex:none;display:grid;place-items:center;color:var(--ink-mute);border-radius:50%}
+.x svg{width:20px;height:20px}
+.qalam{flex:1;height:14px;position:relative}
+.qalam svg{width:100%;height:100%;display:block;overflow:visible}
+
+/* ── الأسئلة ───────────────────────────────────────────────────── */
+.body{padding:18px 18px 0;overflow:hidden}
+.qkind{
+  font-size:11.5px;font-weight:700;color:var(--verm);
+  display:flex;align-items:center;gap:7px;margin-bottom:9px;
+}
+.qkind::after{content:"";flex:1;height:1px;background:var(--rule)}
+.ask{font-size:19px;font-weight:600;line-height:1.5;margin-bottom:15px;color:var(--ink)}
+
+/* كتلة المتن: ليست بطاقة — كتلة مسطورة بهامش */
+.matn{
+  background:var(--inset);border-radius:2px;
+  border-inline-start:3px solid var(--gold-bright);
+  padding:16px 17px 15px;margin-bottom:16px;position:relative;
+}
+.matn p{
+  font-family:'Amiri',serif;font-size:22px;line-height:2.0;
+  color:var(--ink);text-align:justify;text-justify:inter-word;
+}
+.matn .blank{
+  display:inline-block;min-width:92px;border-bottom:2.5px solid var(--verm);
+  margin:0 4px;vertical-align:-3px;
+}
+.takhrij{
+  font-family:'Amiri',serif;font-size:14px;line-height:1.6;color:var(--verm);
+  margin-top:11px;padding-top:9px;border-top:1px solid var(--rule);
+}
+.hl{color:var(--gold-ink)}
+.hl.on{background:var(--gold-bright);color:var(--on-gold);box-shadow:0 0 0 4px var(--gold-bright);border-radius:2px}
+
+/* الخيارات: ترقيم زِنْجَفْري + كتلة مسطورة، لا بطاقات متماثلة */
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{
+  display:flex;align-items:flex-start;gap:12px;width:100%;text-align:start;
+  padding:13px 14px;background:var(--surface);
+  border:1.5px solid var(--rule);border-radius:4px;
+  box-shadow:0 3px 0 var(--rule-soft);cursor:pointer;
+  transition:transform .12s var(--ease),box-shadow .12s var(--ease);
+}
+.opt:active{transform:translateY(3px);box-shadow:0 0 0 var(--rule-soft)}
+.opt .n{
+  flex:none;width:26px;height:26px;display:grid;place-items:center;
+  font-family:'Amiri',serif;font-size:16px;font-weight:700;line-height:1;
+  color:var(--verm);border:1px solid var(--rule);border-radius:50%;
+}
+.opt .txt{font-size:15.5px;line-height:1.55;padding-top:2px}
+.opt .txt.naskh{font-family:'Amiri',serif;font-size:19px;line-height:1.75}
+.opt.sel{border-color:var(--lapis);background:var(--lapis-soft);box-shadow:0 3px 0 var(--lapis)}
+.opt.sel .n{color:var(--lapis);border-color:var(--lapis)}
+.opt.ok{border-color:var(--verd);background:var(--verd-soft);box-shadow:0 3px 0 var(--verd)}
+.opt.ok .n{color:var(--verd);border-color:var(--verd)}
+.opt.no{border-color:var(--verm);background:color-mix(in srgb,var(--verm) 11%,var(--surface));box-shadow:0 3px 0 var(--verm)}
+.opt.no .n{color:var(--verm);border-color:var(--verm)}
+
+/* بنك المقاطع — tap-to-place */
+.slots{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.slotline{
+  min-height:52px;display:flex;align-items:center;gap:10px;padding:8px 12px;
+  border-bottom:1.5px dashed var(--rule);
+}
+.slotline .idx{
+  flex:none;width:23px;height:23px;display:grid;place-items:center;
+  font-family:'Amiri',serif;font-size:14px;font-weight:700;
+  color:var(--verm);
+}
+.chip{
+  display:inline-block;padding:9px 13px;background:var(--surface);
+  border:1.5px solid var(--rule);border-radius:4px;box-shadow:0 3px 0 var(--rule-soft);
+  font-family:'Amiri',serif;font-size:18px;line-height:1.6;cursor:pointer;
+}
+.chip.placed{border-color:var(--lapis);background:var(--lapis-soft);box-shadow:0 3px 0 var(--lapis)}
+.bank{display:flex;flex-wrap:wrap;gap:8px;padding-top:4px}
+.banklbl{font-size:11.5px;font-weight:700;color:var(--ink-mute);margin-bottom:8px}
+
+/* ── قاع الدرس ─────────────────────────────────────────────────── */
+.foot{margin-top:auto;padding:14px 18px 18px;background:var(--surface);border-top:1px solid var(--rule)}
+.verdict{display:flex;gap:11px;align-items:flex-start;margin-bottom:13px}
+.vmark{flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:50%}
+.vmark svg{width:21px;height:21px}
+.vmark.ok{background:var(--verd);color:var(--on-verd)}
+.vmark.no{background:var(--verm);color:#fff}
+.vhead{font-family:'Amiri',serif;font-size:21px;font-weight:700;line-height:1.3}
+.vhead.ok{color:var(--verd)} .vhead.no{color:var(--verm)}
+.vsub{font-size:13.5px;line-height:1.6;color:var(--ink-mute);margin-top:3px}
+.vsub .naskh{color:var(--ink);font-size:17px}
+.foot.ok{background:var(--verd-soft)} .foot.no{background:color-mix(in srgb,var(--verm) 9%,var(--surface))}
+
+/* ── مشغّل التلاوة ─────────────────────────────────────────────── */
+.player{padding:13px 16px 15px;background:var(--surface);border-top:1px solid var(--rule)}
+.ptop{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.play{
+  flex:none;width:52px;height:52px;border-radius:50%;border:0;
+  background:var(--lapis);color:var(--on-lapis);display:grid;place-items:center;
+  box-shadow:0 var(--lip) 0 var(--lapis-deep);cursor:pointer;
+}
+.play svg{width:22px;height:22px}
+.wave{flex:1}
+.wave svg{width:100%;height:30px;display:block}
+.ptime{font-size:12px;font-weight:600;color:var(--ink-mute);font-variant-numeric:tabular-nums;flex:none}
+.pchips{display:flex;gap:7px;flex-wrap:wrap}
+.pchip{
+  padding:7px 12px;border:1px solid var(--rule);border-radius:99px;
+  background:transparent;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;
+  display:flex;align-items:center;gap:5px;
+}
+.pchip svg{width:14px;height:14px}
+.pchip.on{background:var(--lapis);border-color:var(--lapis);color:var(--on-lapis)}
+.reciter{font-size:11.5px;color:var(--ink-mute);margin-top:10px;display:flex;align-items:center;gap:6px}
+.reciter svg{width:13px;height:13px;color:var(--verm)}
+
+/* ── النتيجة ───────────────────────────────────────────────────── */
+.result{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 22px;text-align:center}
+.rseal{width:118px;height:118px;margin-bottom:18px}
+.rhead{font-family:'Amiri',serif;font-size:31px;font-weight:700;line-height:1.3;margin-bottom:8px}
+.rline{font-size:15px;line-height:1.65;color:var(--ink-mute);max-width:300px}
+.tally{display:flex;gap:10px;width:100%;margin:24px 0 8px}
+.tcell{flex:1;padding:14px 8px;background:var(--surface);border-radius:4px;border-top:3px solid var(--tc)}
+.tcell .v{font-family:'Amiri',serif;font-size:27px;font-weight:700;line-height:1.1;color:var(--tc)}
+.tcell .k{font-size:11px;font-weight:600;color:var(--ink-mute);margin-top:4px}
+
+/* ── عام ───────────────────────────────────────────────────────── */
+.h1{font-family:'Amiri',serif;font-size:27px;font-weight:700;line-height:1.3}
+.sec{padding:16px 18px 0}
+.seclbl{font-size:11.5px;font-weight:700;color:var(--verm);display:flex;align-items:center;gap:7px;margin-bottom:11px}
+.seclbl::after{content:"";flex:1;height:1px;background:var(--rule)}
+.row{display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--rule-soft)}
+.row:last-child{border-bottom:0}
+.row .ic{flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:4px;background:var(--lapis-soft);color:var(--lapis)}
+.row .ic svg{width:19px;height:19px}
+.row .main{flex:1;min-width:0}
+.row .main b{display:block;font-size:14.5px;font-weight:600}
+.row .main span{display:block;font-size:12px;color:var(--ink-mute);margin-top:2px;line-height:1.5}
+.sw{flex:none;width:46px;height:27px;border-radius:99px;background:var(--rule);position:relative;transition:background .18s}
+.sw::after{content:"";position:absolute;top:3px;right:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:transform .18s var(--ease);box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.sw.on{background:var(--verd)}
+.sw.on::after{transform:translateX(-19px)}
+.nav{display:flex;border-top:1px solid var(--rule);background:var(--surface)}
+.nav a{flex:1;padding:10px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink-mute);text-decoration:none;font-size:10.5px;font-weight:600;position:relative}
+.nav a svg{width:22px;height:22px}
+.nav a.on{color:var(--lapis)}
+.nav a.on::before{content:"";position:absolute;top:-1px;right:22%;left:22%;height:2.5px;background:var(--lapis);border-radius:0 0 3px 3px}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:99px;font-size:11.5px;font-weight:600;background:var(--inset);color:var(--ink-mute)}
+.pill.g{background:var(--gold-soft);color:var(--gold-ink)}
+.pill.v{background:var(--verd-soft);color:var(--verd)}
+.filters{display:flex;gap:7px;overflow:hidden;padding:0 18px 12px}
+.search{display:flex;align-items:center;gap:9px;margin:14px 18px 12px;padding:12px 14px;background:var(--inset);border-radius:4px;color:var(--ink-mute);font-size:14px}
+.search svg{width:18px;height:18px;flex:none}
+.card-h{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--rule-soft)}
+.num{
+  flex:none;width:40px;height:40px;display:grid;place-items:center;border-radius:2px;
+  font-family:'Amiri',serif;font-size:19px;font-weight:700;
+  background:var(--inset);color:var(--verm);border-inline-start:2px solid var(--verm);
+}
+.sheet{position:absolute;inset:0;background:rgba(10,13,26,.5);display:flex;align-items:flex-end}
+.sheetbody{width:100%;background:var(--surface);border-radius:14px 14px 0 0;padding:22px 20px 20px;text-align:center}
+.notif{
+  display:flex;gap:11px;padding:12px 13px;background:var(--surface);
+  border:1px solid var(--rule);border-radius:10px;margin-bottom:9px;text-align:start;
+}
+.notif .app{flex:none;width:34px;height:34px;border-radius:8px;background:var(--lapis);display:grid;place-items:center}
+.notif .app svg{width:20px;height:20px;color:var(--gold-bright)}
+.notif .nb{flex:1;min-width:0}
+.notif .nt{font-size:12px;font-weight:700;color:var(--ink-mute);display:flex;gap:6px}
+.notif .nm{font-size:13.5px;line-height:1.5;margin-top:3px}
+.notif .nm .naskh{font-family:'Amiri',serif;font-size:15.5px}
+.onb{flex:1;display:flex;flex-direction:column;padding:28px 24px 22px;text-align:center;align-items:center;justify-content:center}
+hr.rule{border:0;border-top:1px solid var(--rule);margin:0 18px}
+.pagehead{max-width:1100px;margin:0 auto 36px;text-align:center}
+.pagehead h1{font-family:'Amiri',serif;font-size:42px;font-weight:700;line-height:1.25;margin-bottom:10px}
+.pagehead p{color:var(--ink-mute);font-size:15px;line-height:1.7;max-width:620px;margin:0 auto}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px}
+.sw2{display:flex;align-items:center;gap:7px;padding:6px 12px 6px 7px;border:1px solid var(--rule);border-radius:99px;font-size:12px;font-weight:600}
+.sw2 i{width:17px;height:17px;border-radius:50%;display:block}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="pagehead">
+  <h1>نواوية · نظام «المَشكاة»</h1>
+  <p>الطريق إسناد، والعقدة خاتم، وفاتحة الوحدة عُنوان مُذهَّب. اللون من أصباغ المخطوط
+     لا من لوحة Material: لازَوَرْد للهوية، وذَهَب للإتقان، وزِنْجَفْر حِبرًا للترقيم والتخريج،
+     والأخضر للصواب وحده.</p>
+  <div class="swatches">
+    <span class="sw2"><i style="background:#1B3C86"></i>لازَوَرْد</span>
+    <span class="sw2"><i style="background:#D9A43C"></i>ذَهَب</span>
+    <span class="sw2"><i style="background:#B33018"></i>زِنْجَفْر</span>
+    <span class="sw2"><i style="background:#1C6F4C"></i>زَنْجار</span>
+    <span class="sw2"><i style="background:#241E16"></i>عَفْص</span>
+    <span class="sw2"><i style="background:#F3F1EA"></i>رَق</span>
+    <span class="sw2"><i style="background:#0D1328"></i>نِيل</span>
+  </div>
+</div>
+
+<!-- ══ SVG defs: girih lattice + icons ══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <symbol id="i-fire" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2s1.2 3.2 3.4 5.1C17.9 9.3 19 11.2 19 13.6 19 17.7 15.9 21 12 21s-7-3.3-7-7.4c0-1.9.7-3.3 1.8-4.6.3 1.3 1.1 2.2 2.1 2.2 1.4 0 2.1-1.1 2.1-3.1C11 6.1 11.4 3.9 12 2z"/><path fill="var(--bg)" opacity=".55" d="M12 12.2c.9 1 1.6 1.9 1.6 3.1 0 1.8-1.4 2.9-2.9 2.3-1.1-.4-1.6-1.6-1.2-2.8.3-1 1.5-1.8 2.5-2.6z"/></symbol>
+  <symbol id="i-gem" viewBox="0 0 24 24"><path fill="currentColor" d="M7.5 3h9l4 5.5-8.5 12.5L3.5 8.5 7.5 3zm.9 2L6 8.5h4.2L8.4 5zm3.6 0-1.8 3.5h3.6L12 5zm3.6 0-1.8 3.5H18L15.6 5zM6.6 10.5l4.3 6.3-1.9-6.3H6.6zm4.6 0 1.8 6 1.8-6h-3.6zm5.3 0-1.9 6.3 4.3-6.3h-2.4z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20.8c-5.9-4.4-8.9-7.5-8.9-10.7 0-2.7 2-4.7 4.6-4.7 1.8 0 3.3 1 4.3 2.6 1-1.6 2.5-2.6 4.3-2.6 2.6 0 4.6 2 4.6 4.7 0 3.2-3 6.3-8.9 10.7z"/></symbol>
+  <symbol id="i-heart-o" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" d="M12 19.3C6.4 14.9 3.5 12.6 3.5 9.8c0-2.3 1.7-4.1 3.9-4.1 1.6 0 3.1.9 4.6 2.7 1.5-1.8 3-2.7 4.6-2.7 2.2 0 3.9 1.8 3.9 4.1 0 2.8-2.9 5.1-8.5 9.5z"/></symbol>
+  <symbol id="i-cog" viewBox="0 0 24 24"><path fill="currentColor" d="M12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zm8.4-2.1.1-1.4-.1-1.4 1.8-1.3-1.5-3-2.1.7-1.2-.8-.2-2.2h-3.3l-.9 2-1.4.3L9.5 4.3l-3 1.5.6 2.1-.8 1.2-2.2.2v3.3l2 .9.3 1.4-1.6 1.6 1.5 3 2.1-.7 1.2.8.2 2.2h3.3l.9-2 1.4-.3 1.6 1.6 3-1.5-.7-2.1.8-1.2 2.2-.2z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><path fill="currentColor" d="M6 10V8a6 6 0 1 1 12 0v2h1.5v11h-15V10H6zm2 0h8V8a4 4 0 1 0-8 0v2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" d="m5 13 4.5 4.5L19 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.2v13.6c0 .7.8 1.2 1.4.8l10.3-6.8a1 1 0 0 0 0-1.6L9.4 4.4c-.6-.4-1.4 0-1.4.8z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M7 4.5h3.5v15H7zM13.5 4.5H17v15h-3.5z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="2.6 3.2" d="M17 5.5h-6A3.5 3.5 0 0 0 7.5 9v6A3.5 3.5 0 0 0 11 18.5h6"/><circle cx="18" cy="5.5" r="2.6" fill="currentColor"/><circle cx="18" cy="18.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-cycle" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M20 12a8 8 0 1 1-2.6-5.9M20 3.5V7h-3.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M12 6.5S10 4.5 4.5 4.5v13C10 17.5 12 19.5 12 19.5s2-2 7.5-2v-13C14 4.5 12 6.5 12 6.5zm0 0v13"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M12 11.5a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5zm-7 8.5c0-3.3 3.1-5.5 7-5.5s7 2.2 7 5.5"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M15.5 15.5 21 21m-2.5-10a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0z"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5a6 6 0 0 0-6 6v4L4 16v1.5h16V16l-2-3.5v-4a6 6 0 0 0-6-6zM9.5 19a2.5 2.5 0 0 0 5 0h-5z"/></symbol>
+  <symbol id="i-speed" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M12 13V8m-8 5a8 8 0 1 1 16 0"/><circle cx="12" cy="13" r="1.6" fill="currentColor"/></symbol>
+  <symbol id="i-loop" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M7 7h10v3l3.5-4L17 2v3H5v6m12 6H7v-3l-3.5 4L7 22v-3h12v-6"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path fill="currentColor" d="M20 15.3A8.6 8.6 0 0 1 9.2 4.2 8.5 8.5 0 1 0 20 15.3z"/></symbol>
+  <symbol id="i-lampmark" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" d="M5 21V9.5C5 5.9 8 3.5 12 3.5s7 2.4 7 6V21"/><path fill="currentColor" d="M12 8.5c1.4 1.6 2.2 2.8 2.2 4.1 0 1.5-1 2.5-2.2 2.5s-2.2-1-2.2-2.5c0-1.3.8-2.5 2.2-4.1z"/></symbol>
+  <symbol id="i-quill" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21s1-4.5 4.5-8S18 4 21 3c-1 3-1.5 10-5 13.5S3 21 3 21zm3.5-2.5c1.5-.3 4-.9 6-2.9 2-2 3.3-5.3 3.9-7.6-2.3.9-5 2.4-7 4.4s-2.6 4.6-2.9 6.1z"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 15V3m0 0L8 7m4-4 4 4M5 14v6h14v-6"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path fill="currentColor" d="M6 2.5h12v19l-6-4.5-6 4.5z"/></symbol>
+</defs>
+</svg>
+
+<div class="wall" id="wall"></div>
+
+<script>
+/* ═══ المحتوى الحقيقي من المشروع (app/src/main/.../NawawiAuthenticCatalog) ═══ */
+const AR = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+const el = (h) => { const t=document.createElement('template'); t.innerHTML=h.trim(); return t.content.firstElementChild; };
+const ic = (n,c="") => `<svg class="${c}"><use href="#i-${n}"/></svg>`;
+
+/* ── الخاتم: حلقة تقدّم ──────────────────────────────────────── */
+function ringSvg(pct, color){
+  const r=40, C=2*Math.PI*r;
+  return `<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="${r}" fill="none"
+    stroke="var(--rule)" stroke-width="3"/><circle cx="42" cy="42" r="${r}" fill="none"
+    stroke="${color}" stroke-width="3.5" stroke-linecap="round"
+    stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg>`;
+}
+
+/* ── المصباح في المشكاة ──────────────────────────────────────── */
+function lamp(lit, size=78){
+  const glow = lit ? `<ellipse cx="39" cy="44" rx="25" ry="27" fill="var(--gold-bright)" opacity=".16"/>` : '';
+  const flame = lit
+    ? `<path d="M39 25c3.6 4.2 5.6 7 5.6 10.2 0 3.4-2.5 5.8-5.6 5.8s-5.6-2.4-5.6-5.8C33.4 32 35.4 29.2 39 25z" fill="var(--gold-bright)"/>
+       <path d="M39 31.5c1.7 2.1 2.6 3.5 2.6 5.1 0 1.7-1.2 2.9-2.6 2.9s-2.6-1.2-2.6-2.9c0-1.6.9-3 2.6-5.1z" fill="#FFF3D6" opacity=".9"/>`
+    : `<path d="M39 29c2.6 3 4 5 4 7.3 0 2.4-1.8 4.1-4 4.1s-4-1.7-4-4.1c0-2.3 1.4-4.3 4-7.3z" fill="none" stroke="var(--rule)" stroke-width="1.6"/>`;
+  const stroke = lit ? 'var(--gold)' : 'var(--rule)';
+  return `<svg viewBox="0 0 78 92" style="width:${size}px;height:${size*92/78}px">
+    ${glow}
+    <path d="M5 90V36C5 18.5 20 5 39 5s34 13.5 34 31v54" fill="none" stroke="${stroke}" stroke-width="2.2"/>
+    <path d="M12 90V37C12 23 24 12 39 12s27 11 27 25v53" fill="none" stroke="${stroke}" stroke-width="1" opacity=".45"/>
+    <path d="M39 43v5" stroke="${stroke}" stroke-width="1.4"/>
+    <path d="M26 48h26l-4.5 16.5c0 4.5-4 7-8.5 7s-8.5-2.5-8.5-7L26 48z" fill="${lit?'var(--gold-soft)':'none'}" stroke="${stroke}" stroke-width="1.9" stroke-linejoin="round"/>
+    <path d="M30.5 54h17" stroke="${stroke}" stroke-width="1" opacity=".55"/>
+    ${flame}
+  </svg>`;
+}
+
+/* ── مَدّة القلم: شريط تقدّم مُدبَّب ─────────────────────────── */
+function qalam(pct){
+  return `<svg viewBox="0 0 300 14" preserveAspectRatio="none">
+    <defs><clipPath id="qc${pct}"><rect x="${300*(1-pct)}" y="0" width="${300*pct}" height="14"/></clipPath></defs>
+    <path d="M300 4.2C220 3 120 2.4 2 5.6c118 3.4 218 3.2 298 2.2z" fill="var(--rule)"/>
+    <path d="M300 3.4C218 2 118 1.4 2 5.6c116 4 216 4 298 3z" fill="var(--lapis)" clip-path="url(#qc${pct})"/>
+  </svg>`;
+}
+
+/* ── موجة الصوت ──────────────────────────────────────────────── */
+function wave(playedPct){
+  let bars='';
+  const n=46, seed=[3,7,12,18,9,14,22,27,19,11,8,16,24,29,21,13,6,10,17,25,30,23,15,9,5,12,20,28,26,18,11,7,14,21,27,24,16,10,6,13,19,26,22,15,8,4];
+  for(let i=0;i<n;i++){
+    const h=4+seed[i]*0.75, y=(30-h)/2;
+    const on = (i/n) <= playedPct;
+    bars+=`<rect x="${i*(300/n)+1}" y="${y}" width="${300/n-2.4}" height="${h}" rx="1.1"
+      fill="${on?'var(--lapis)':'var(--rule)'}"/>`;
+  }
+  return `<svg viewBox="0 0 300 30" preserveAspectRatio="none">${bars}</svg>`;
+}
+
+/* ── ختم النتيجة: شمسة ──────────────────────────────────────── */
+function rosette(size=118){
+  let pts='';
+  for(let i=0;i<16;i++){
+    const a=(i*Math.PI*2)/16, r=i%2?38:52;
+    pts+=`${59+r*Math.cos(a)},${59+r*Math.sin(a)} `;
+  }
+  return `<svg class="rseal" viewBox="0 0 118 118" style="width:${size}px;height:${size}px">
+    <circle cx="59" cy="59" r="57" fill="none" stroke="var(--gold)" stroke-width="1.5"/>
+    <circle cx="59" cy="59" r="51" fill="var(--gold-soft)"/>
+    <polygon points="${pts}" fill="none" stroke="var(--gold)" stroke-width="1.3"/>
+    <circle cx="59" cy="59" r="30" fill="var(--gold-bright)"/>
+    <path d="m46 60 8.5 8.5L73 50" fill="none" stroke="var(--on-gold)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+const UNITS=[
+  {n:1,t:"أصولُ الإسلامِ والنيَّة",      c:"var(--band-1)", from:1,to:7,  done:3},
+  {n:2,t:"حُرمةُ المسلمِ والوَرَع",      c:"var(--band-2)", from:8,to:14, done:0},
+];
+const H=[
+  {n:1,t:"إنما الأعمال بالنيات",            s:"done", p:1.0},
+  {n:2,t:"بيان الإسلام والإيمان والإحسان",  s:"done", p:1.0},
+  {n:3,t:"أركان الإسلام الخمسة",            s:"prog", p:0.62},
+  {n:4,t:"خلق الإنسان وأطوار خلقه",         s:"now",  p:0.0},
+  {n:5,t:"النهي عن البدع والمحدثات",        s:"lock", p:0},
+  {n:6,t:"الحلال بيّن والحرام بيّن",         s:"lock", p:0},
+  {n:7,t:"الدين النصيحة",                   s:"lock", p:0},
+];
+
+const statusStrip = (hearts=3) => `
+<div class="strip">
+  <span class="stat xp">${ic('gem')}${AR(1240)}</span>
+  <span class="stat fire">${ic('fire')}${AR(7)}</span>
+  <span class="hearts">${[1,2,3,4,5].map(i=>
+    `<svg style="color:${i<=hearts?'var(--heart)':'var(--rule)'}"><use href="#i-heart${i<=hearts?'':'-o'}"/></svg>`).join('')}</span>
+  <span class="cog">${ic('cog')}</span>
+</div>`;
+
+const nav = (on) => `
+<nav class="nav">
+  ${[['route','الطريق'],['cycle','المراجعة'],['book','الأحاديث'],['person','حسابي']]
+    .map(([i,l],k)=>`<a href="#" class="${k===on?'on':''}">${ic(i)}<span>${l}</span></a>`).join('')}
+</nav>`;
+
+/* ═══════════════ ١. شاشة الطريق ═══════════════ */
+function screenPath(){
+  let nodes='';
+  for(const h of H){
+    const isNow = h.s==='now';
+    const ringColor = 'var(--gold-bright)';
+    const inner = h.s==='done' ? ic('check')
+                : h.s==='lock' ? ic('lock')
+                : `<span>${AR(h.n)}</span>`;
+    nodes += isNow ? `
+      <div class="link active">
+        <span class="seal now">${inner}</span>
+        <span class="gloss col">
+          <span class="cue">ابدأ الحديث ${AR(h.n)}</span>
+          <span class="t naskh">${h.t}</span>
+        </span>
+      </div>` : `
+      <div class="link">
+        ${h.p>0&&h.p<1?ringSvg(h.p,ringColor):''}
+        <span class="seal ${h.s}">${inner}</span>
+        <span class="gloss ${h.s==='lock'?'off':''}">
+          <span class="t naskh">${h.t}</span>
+          <span class="lead"></span>
+          ${h.s==='prog'?`<span class="pct">${AR(62)}٪</span>`:''}
+        </span>
+      </div>`;
+  }
+  const u=UNITS[0], u2=UNITS[1];
+  return `
+  ${statusStrip()}
+  <div class="scroll">
+    <div class="unwan" style="--uc:${u.c}">
+      <div class="unwan-row">
+        <span class="cartouche">${AR(u.n)}</span>
+        <span>
+          <h2>${u.t}</h2>
+          <div class="meta">الأحاديث ${AR(u.from)}–${AR(u.to)}</div>
+        </span>
+      </div>
+      <div class="bar"><i style="width:${u.done/7*100}%"></i></div>
+    </div>
+    <div class="isnad">${nodes}</div>
+    <div class="lampwrap">
+      <span class="lamp">${lamp(false)}</span>
+      <span class="lampcap">يُضيء بإتمام الوحدة</span>
+    </div>
+    <div class="unwan" style="--uc:${u2.c};opacity:.42">
+      <div class="unwan-row">
+        <span class="cartouche">${AR(u2.n)}</span>
+        <span><h2>${u2.t}</h2><div class="meta">الأحاديث ${AR(8)}–${AR(14)}</div></span>
+      </div>
+    </div>
+  </div>
+  ${nav(0)}`;
+}
+
+/* ═══════════════ ٢. القارئ + التلاوة ═══════════════ */
+function screenReader(){
+  const words = ["إِنَّمَا","الأَعْمَالُ","بِالنِّيَّاتِ،","وَإِنَّمَا","لِكُلِّ","امْرِئٍ","مَا","نَوَى،","فَمَنْ","كَانَتْ","هِجْرَتُهُ","إِلَى","اللَّهِ","وَرَسُولِهِ","فَهِجْرَتُهُ","إِلَى","اللَّهِ","وَرَسُولِهِ"];
+  const cur = 10;
+  const body = words.map((w,i)=>
+    i<cur ? `<span class="hl">${w}</span>` : i===cur ? `<span class="hl on">${w}</span>` : w
+  ).join(' ');
+  return `
+  <div class="lessontop">
+    <span class="x">${ic('x')}</span>
+    <span style="flex:1">
+      <b class="naskh" style="font-size:19px;font-weight:700">إنما الأعمال بالنيات</b>
+      <span style="display:block;font-size:11.5px;color:var(--ink-mute);margin-top:1px">الحديث ${AR(1)} · الوحدة الأولى</span>
+    </span>
+    <span class="x" style="color:var(--gold-ink)">${ic('bookmark')}</span>
+  </div>
+  <div class="scroll">
+    <div class="body">
+      <div class="qkind">الرَّاوي</div>
+      <p class="naskh" style="font-size:17px;line-height:1.85;color:var(--ink-mute);margin-bottom:15px">
+        عَنْ أَمِيرِ الْمُؤْمِنِينَ أَبِي حَفْصٍ عُمَرَ بْنِ الْخَطَّابِ رَضِيَ اللَّهُ عَنْهُ قَالَ: سَمِعْتُ رَسُولَ اللَّهِ ﷺ يَقُولُ:
+      </p>
+      <div class="matn">
+        <p>«${body}…»</p>
+        <div class="takhrij">رواه البخاري ومسلم في صحيحيهما — البخاري ١، مسلم ١٩٠٧</div>
+      </div>
+      <div class="qkind">من المفردات</div>
+      <div class="row" style="padding:10px 0">
+        <span class="num" style="width:auto;padding:4px 10px;font-size:17px">النِّيَّات</span>
+        <span class="main"><span style="font-size:13px">القصد وعزم القلب على العمل تقرّبًا إلى الله</span></span>
+      </div>
+      <div class="row" style="padding:10px 0">
+        <span class="num" style="width:auto;padding:4px 10px;font-size:17px">هِجْرَتُهُ</span>
+        <span class="main"><span style="font-size:13px">ترك بلد الشرك إلى بلد الإسلام ابتغاء مرضاة الله</span></span>
+      </div>
+      <div style="display:flex;gap:9px;margin:16px 0 18px">
+        <button class="btn" style="flex:1">${ic('quill')}اختبر حفظك</button>
+        <button class="btn quiet" style="flex:0 0 38%">${ic('share')}انسخ</button>
+      </div>
+    </div>
+  </div>
+  <div class="player">
+    <div class="ptop">
+      <button class="play">${ic('pause')}</button>
+      <span class="wave">${wave(0.56)}</span>
+      <span class="ptime">٠:٣٢ / ٠:٥٧</span>
+    </div>
+    <div class="pchips">
+      <span class="pchip on">${ic('speed')}سرعة ٠.٧٥</span>
+      <span class="pchip">${ic('loop')}تكرار المقطع</span>
+      <span class="pchip">${ic('quill')}إخفاء التشكيل</span>
+    </div>
+    <div class="reciter">${ic('quill')}قراءة بصوت قارئ مُرخَّص — لا صوت آليًّا</div>
+  </div>`;
+}
+
+/* ═══════════════ ٣. الدرس: اختيار ═══════════════ */
+function screenLessonAsk(){
+  return `
+  <div class="lessontop">
+    <span class="x">${ic('x')}</span>
+    <span class="qalam">${qalam(0.34)}</span>
+    <span class="hearts" style="margin:0">${[1,2,3].map(i=>
+      `<svg style="color:${i<=2?'var(--heart)':'var(--rule)'}"><use href="#i-heart${i<=2?'':'-o'}"/></svg>`).join('')}</span>
+  </div>
+  <div class="scroll">
+    <div class="body">
+      <div class="qkind">أكمِل المتن</div>
+      <p class="ask">ما الكلمة الساقطة من الحديث؟</p>
+      <div class="matn">
+        <p>«إِنَّمَا الأَعْمَالُ <span class="blank"></span>، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى»</p>
+      </div>
+      <div class="opts">
+        <button class="opt"><span class="n">${AR(1)}</span><span class="txt naskh">بِالأَقْوَالِ</span></button>
+        <button class="opt sel"><span class="n">${AR(2)}</span><span class="txt naskh">بِالنِّيَّاتِ</span></button>
+        <button class="opt"><span class="n">${AR(3)}</span><span class="txt naskh">بِالْمَظَاهِرِ</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><button class="btn">تحقَّق</button></div>`;
+}
+
+/* ═══════════════ ٤. الدرس: صواب ═══════════════ */
+function screenLessonOk(){
+  return `
+  <div class="lessontop">
+    <span class="x">${ic('x')}</span>
+    <span class="qalam">${qalam(0.34)}</span>
+    <span class="hearts" style="margin:0">${[1,2,3].map(i=>
+      `<svg style="color:${i<=2?'var(--heart)':'var(--rule)'}"><use href="#i-heart${i<=2?'':'-o'}"/></svg>`).join('')}</span>
+  </div>
+  <div class="scroll">
+    <div class="body">
+      <div class="qkind">أكمِل المتن</div>
+      <p class="ask">ما الكلمة الساقطة من الحديث؟</p>
+      <div class="matn">
+        <p>«إِنَّمَا الأَعْمَالُ <span class="naskh" style="color:var(--verd);font-weight:700">بِالنِّيَّاتِ</span>، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى»</p>
+      </div>
+      <div class="opts">
+        <button class="opt" style="opacity:.42"><span class="n">${AR(1)}</span><span class="txt naskh">بِالأَقْوَالِ</span></button>
+        <button class="opt ok"><span class="n">${ic('check')}</span><span class="txt naskh">بِالنِّيَّاتِ</span></button>
+        <button class="opt" style="opacity:.42"><span class="n">${AR(3)}</span><span class="txt naskh">بِالْمَظَاهِرِ</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="foot ok">
+    <div class="verdict">
+      <span class="vmark ok">${ic('check')}</span>
+      <span>
+        <div class="vhead ok naskh">ضبطتَها</div>
+        <div class="vsub">عليها يدور ثُلث العلم — مدار العمل على القلب.</div>
+      </span>
+    </div>
+    <button class="btn good">واصِل</button>
+  </div>`;
+}
+
+/* ═══════════════ ٥. الدرس: خطأ ═══════════════ */
+function screenLessonNo(){
+  return `
+  <div class="lessontop">
+    <span class="x">${ic('x')}</span>
+    <span class="qalam">${qalam(0.34)}</span>
+    <span class="hearts" style="margin:0">${[1,2,3].map(i=>
+      `<svg style="color:${i<=1?'var(--heart)':'var(--rule)'}"><use href="#i-heart${i<=1?'':'-o'}"/></svg>`).join('')}</span>
+  </div>
+  <div class="scroll">
+    <div class="body">
+      <div class="qkind">أكمِل المتن</div>
+      <p class="ask">ما الكلمة الساقطة من الحديث؟</p>
+      <div class="matn">
+        <p>«إِنَّمَا الأَعْمَالُ <span class="naskh" style="color:var(--verd);font-weight:700">بِالنِّيَّاتِ</span>، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى»</p>
+      </div>
+      <div class="opts">
+        <button class="opt no"><span class="n">${ic('x')}</span><span class="txt naskh">بِالأَقْوَالِ</span></button>
+        <button class="opt ok"><span class="n">${ic('check')}</span><span class="txt naskh">بِالنِّيَّاتِ</span></button>
+        <button class="opt" style="opacity:.42"><span class="n">${AR(3)}</span><span class="txt naskh">بِالْمَظَاهِرِ</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="foot no">
+    <div class="verdict">
+      <span class="vmark no">${ic('x')}</span>
+      <span>
+        <div class="vhead no naskh">الصواب: بِالنِّيَّاتِ</div>
+        <div class="vsub">لفظ الحديث «بِالنِّيَّاتِ» بالنون — والأقوال داخلة في الأعمال.
+          سيعود عليك هذا السؤال قبل نهاية الدرس.</div>
+      </span>
+    </div>
+    <div style="display:flex;gap:9px">
+      <button class="btn quiet sm" style="flex:0 0 42%">${ic('book')}افتح الشرح</button>
+      <button class="btn" style="flex:1">واصِل</button>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════ ٦. الدرس: ترتيب المقاطع ═══════════════ */
+function screenLessonOrder(){
+  return `
+  <div class="lessontop">
+    <span class="x">${ic('x')}</span>
+    <span class="qalam">${qalam(0.72)}</span>
+    <span class="hearts" style="margin:0">${[1,2,3].map(i=>
+      `<svg style="color:${i<=2?'var(--heart)':'var(--rule)'}"><use href="#i-heart${i<=2?'':'-o'}"/></svg>`).join('')}</span>
+  </div>
+  <div class="scroll">
+    <div class="body">
+      <div class="qkind">رتِّب المتن</div>
+      <p class="ask">اضغط المقاطع على ترتيبها في الحديث.</p>
+      <div class="slots">
+        <div class="slotline"><span class="idx">${AR(1)}</span>
+          <span class="chip placed">إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ</span></div>
+        <div class="slotline"><span class="idx">${AR(2)}</span>
+          <span class="chip placed">وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى</span></div>
+        <div class="slotline"><span class="idx">${AR(3)}</span></div>
+      </div>
+      <div class="banklbl">المقاطع المتاحة</div>
+      <div class="bank">
+        <span class="chip">فَهِجْرَتُهُ إِلَى مَا هَاجَرَ إِلَيْهِ</span>
+        <span class="chip">فَمَنْ كَانَتْ هِجْرَتُهُ إِلَى اللَّهِ</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><button class="btn off">تحقَّق</button></div>`;
+}
+
+/* ═══════════════ ٧. نتيجة الدرس ═══════════════ */
+function screenResult(){
+  return `
+  <div class="result">
+    ${rosette(118)}
+    <div class="rhead naskh">الحديث الرابع في حفظك</div>
+    <div class="rline">«خلق الإنسان وأطوار خلقه» — ضبطتَ ستة أسئلة من سبعة من أول مرة.</div>
+    <div class="tally">
+      <div class="tcell" style="--tc:var(--lapis)"><div class="v">${AR(24)}</div><div class="k">نقطة خبرة</div></div>
+      <div class="tcell" style="--tc:var(--verd)"><div class="v">${AR(86)}٪</div><div class="k">إجابات أول مرة</div></div>
+      <div class="tcell" style="--tc:var(--gold-ink)"><div class="v">${AR(4)}:${AR(12)}</div><div class="k">دقيقة فعلية</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin:18px 0 4px;font-size:13.5px;color:var(--ink-mute)">
+      ${ic('cycle')}<span>موعد المراجعة القادمة: بعد ${AR(3)} أيام</span>
+    </div>
+  </div>
+  <div class="foot" style="border-top:1px solid var(--rule)">
+    <button class="btn" style="margin-bottom:9px">الحديث الخامس</button>
+    <button class="btn quiet">عُد إلى الطريق</button>
+  </div>`;
+}
+
+/* ═══════════════ ٨. إتمام الوحدة ═══════════════ */
+function screenUnitDone(){
+  return `
+  <div class="result" style="justify-content:center">
+    <span style="margin-bottom:6px">${lamp(true,130)}</span>
+    <div class="rhead naskh" style="color:var(--gold-ink)">أتممتَ الوحدة الأولى</div>
+    <div class="rline">سبعة أحاديث في أصول الإسلام والنيّة، صارت كلّها في حفظك.
+      ومصباح الوحدة مُضاء في حسابك من اليوم.</div>
+    <div style="margin:22px 0 6px;padding:15px 16px;background:var(--inset);border-radius:3px;
+         border-inline-start:3px solid var(--gold-bright);text-align:start;width:100%">
+      <div class="qkind" style="color:var(--gold-ink)">من فوائد الوحدة</div>
+      <p class="naskh" style="font-size:18.5px;line-height:1.9">
+        مدار قبول الأعمال على إخلاص النيّة، وأنّ العادات المباحة تنقلب عبادات بالنيّة الصالحة.</p>
+    </div>
+    <span class="pill g" style="margin-top:12px">${ic('gem')}${AR(120)} نقطة خبرة للوحدة</span>
+  </div>
+  <div class="foot" style="border-top:1px solid var(--rule)">
+    <button class="btn gold" style="margin-bottom:9px">افتح الوحدة الثانية</button>
+    <button class="btn quiet">راجِع الوحدة الأولى</button>
+  </div>`;
+}
+
+/* ═══════════════ ٩. المراجعة ═══════════════ */
+function screenReview(){
+  const modes=[
+    {i:'cycle',t:"مراجعة اليوم",s:"٥ أحاديث استحقّت المراجعة اليوم وفق جدول التذكّر",m:5,c:'var(--lapis)',cta:'ابدأ'},
+    {i:'speed',t:"الأحاديث الأثقل عليك",s:"السبعة الأقل إتقانًا في حفظك الآن",m:7,c:'var(--verm)',cta:'ابدأ'},
+    {i:'book', t:"الأربعون كاملة",s:"سؤال من كل حديث — بلا خصم قلوب",m:42,c:'var(--gold-ink)',cta:'ابدأ'},
+  ];
+  return `
+  ${statusStrip()}
+  <div class="scroll">
+    <div class="sec">
+      <h1 class="h1">المراجعة</h1>
+      <p style="font-size:13.5px;color:var(--ink-mute);line-height:1.65;margin-top:5px">
+        الحفظ يثبت بالعَود عليه. اخترتُ لك اليوم خمسة أحاديث حان وقتها.</p>
+    </div>
+    <div class="sec">
+      ${modes.map(m=>`
+      <div style="padding:15px 0;border-bottom:1px solid var(--rule-soft)">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <span class="row-ic" style="flex:none;width:38px;height:38px;display:grid;place-items:center;
+            border-radius:3px;background:var(--inset);color:${m.c};border-inline-start:2px solid ${m.c}">${ic(m.i)}</span>
+          <span style="flex:1;min-width:0">
+            <b class="naskh" style="font-size:19px;font-weight:700;display:block">${m.t}</b>
+            <span style="display:block;font-size:12.5px;color:var(--ink-mute);line-height:1.55;margin-top:3px">${m.s}</span>
+          </span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:11px">
+          <span class="pill">${AR(m.m)} حديثًا</span>
+          <button class="btn sm" style="width:auto;margin-inline-start:auto;padding:9px 22px">${m.cta}</button>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+  ${nav(1)}`;
+}
+
+/* ═══════════════ ١٠. الفهرس ═══════════════ */
+function screenIndex(){
+  const list=[
+    {n:1,t:"إنما الأعمال بالنيات",x:"البخاري ومسلم",p:100},
+    {n:2,t:"بيان الإسلام والإيمان والإحسان",x:"مسلم",p:100},
+    {n:3,t:"أركان الإسلام الخمسة",x:"البخاري ومسلم",p:62},
+    {n:4,t:"خلق الإنسان وأطوار خلقه",x:"البخاري ومسلم",p:0},
+    {n:5,t:"النهي عن البدع والمحدثات",x:"مسلم",p:0},
+  ];
+  return `
+  <div class="scroll">
+    <div class="sec"><h1 class="h1">الأربعون النووية</h1>
+      <p style="font-size:13px;color:var(--ink-mute);margin-top:4px">${AR(42)} حديثًا بالتشكيل والتخريج</p></div>
+    <div class="search">${ic('search')}<span>ابحث في المتن أو الراوي أو الرقم…</span></div>
+    <div class="filters">
+      <span class="pill" style="background:var(--lapis);color:var(--on-lapis)">الكل</span>
+      <span class="pill">${ic('bookmark')}المحفوظة</span>
+      <span class="pill">المُتقنة</span>
+      <span class="pill">لم تبدأ</span>
+    </div>
+    <hr class="rule">
+    <div class="sec" style="padding-top:4px">
+      ${list.map(h=>`
+      <div class="card-h">
+        <span class="num">${AR(h.n)}</span>
+        <span class="main" style="flex:1;min-width:0">
+          <b class="naskh" style="font-size:18px;font-weight:700;display:block;line-height:1.4">${h.t}</b>
+          <span class="naskh" style="display:block;font-size:13px;color:var(--verm);margin-top:3px">رواه ${h.x}</span>
+        </span>
+        <span style="flex:none;align-self:center">${
+          h.p===100?`<span class="pill g">${ic('check')}مُتقن</span>`
+          : h.p>0?`<span class="pill">${AR(h.p)}٪</span>`
+          : `<span class="pill" style="opacity:.6">—</span>`}</span>
+      </div>`).join('')}
+    </div>
+  </div>
+  ${nav(2)}`;
+}
+
+/* ═══════════════ ١١. حسابي ═══════════════ */
+function screenProfile(){
+  const cells=[
+    {v:AR(7),k:"يوم متتابع",c:'var(--gold-ink)'},
+    {v:AR(1240),k:"نقطة خبرة",c:'var(--lapis)'},
+    {v:`${AR(12)}/${AR(42)}`,k:"حديثًا مُتقنًا",c:'var(--verd)'},
+  ];
+  let grid='';
+  for(let i=1;i<=42;i++){
+    const done=i<=12, prog=i===13;
+    grid+=`<span style="width:100%;aspect-ratio:1;border-radius:2px;display:grid;place-items:center;
+      font-family:Amiri,serif;font-size:11px;font-weight:700;
+      background:${done?'var(--gold-soft)':prog?'var(--lapis-soft)':'var(--inset)'};
+      color:${done?'var(--gold-ink)':prog?'var(--lapis)':'var(--ink-mute)'};
+      ${done?'border-inline-start:2px solid var(--gold-bright)':''}">${AR(i)}</span>`;
+  }
+  return `
+  <div class="scroll">
+    <div class="sec"><h1 class="h1">حسابي</h1>
+      <p style="font-size:12.5px;color:var(--ink-mute);margin-top:4px">
+        محفوظ على جهازك وحده — بلا حساب ولا خادم</p></div>
+    <div class="sec">
+      <div class="tally" style="margin:4px 0 0">
+        ${cells.map(c=>`<div class="tcell" style="--tc:${c.c}"><div class="v">${c.v}</div><div class="k">${c.k}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="sec">
+      <div class="seclbl">خريطة حفظك</div>
+      <div style="display:grid;grid-template-columns:repeat(11,1fr);gap:4px">${grid}</div>
+      <div style="display:flex;gap:12px;margin-top:11px;font-size:11px;color:var(--ink-mute)">
+        <span style="display:flex;align-items:center;gap:5px"><i style="width:11px;height:11px;background:var(--gold-soft);border-inline-start:2px solid var(--gold-bright);display:block"></i>مُتقن</span>
+        <span style="display:flex;align-items:center;gap:5px"><i style="width:11px;height:11px;background:var(--lapis-soft);display:block"></i>قيد الحفظ</span>
+        <span style="display:flex;align-items:center;gap:5px"><i style="width:11px;height:11px;background:var(--inset);display:block"></i>لم تبدأ</span>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="seclbl">مصابيحك</div>
+      <div style="display:flex;gap:4px;justify-content:space-between">
+        ${[1,1,0,0,0,0].map((l,i)=>`<span style="text-align:center">
+          ${lamp(!!l,44)}<span style="display:block;font-family:Amiri,serif;font-size:12px;font-weight:700;
+          color:${l?'var(--gold-ink)':'var(--ink-mute)'}">${AR(i+1)}</span></span>`).join('')}
+      </div>
+    </div>
+  </div>
+  ${nav(3)}`;
+}
+
+/* ═══════════════ ١٢. الإعدادات: التذكير ═══════════════ */
+function screenSettings(){
+  return `
+  <div class="lessontop"><span class="x">${ic('x')}</span>
+    <span style="flex:1"><b style="font-size:17px;font-weight:600">التذكير اليومي</b></span></div>
+  <div class="scroll">
+    <div class="sec">
+      <div class="seclbl">الموعد</div>
+      <div class="row">
+        <span class="ic">${ic('bell')}</span>
+        <span class="main"><b>تذكير واحد في اليوم</b><span>لا أكثر — ولو فاتتك أيام</span></span>
+        <span class="sw on"></span>
+      </div>
+      <div class="row">
+        <span class="ic" style="background:var(--gold-soft);color:var(--gold-ink)">${ic('moon')}</span>
+        <span class="main"><b>بعد العشاء</b><span>٨:٤٥ مساءً تقريبًا — يتبع وقت صلاتك</span></span>
+        <span style="font-family:Amiri,serif;font-size:21px;font-weight:700;color:var(--lapis)">٨:٤٥</span>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="seclbl">أدب التذكير</div>
+      <div class="row">
+        <span class="ic" style="background:var(--verd-soft);color:var(--verd)">${ic('lampmark')}</span>
+        <span class="main"><b>لا تذكير في أوقات الصلاة</b>
+          <span>يُؤجَّل التذكير إذا وقع من ١٠ دقائق قبل الأذان إلى ٣٠ دقيقة بعده</span></span>
+        <span class="sw on"></span>
+      </div>
+      <div class="row">
+        <span class="ic">${ic('cog')}</span>
+        <span class="main"><b>مدينتك: القاهرة</b><span>لحساب أوقات الصلاة على جهازك — بلا إذن موقع ولا إنترنت</span></span>
+      </div>
+      <div class="row">
+        <span class="ic">${ic('book')}</span>
+        <span class="main"><b>طريقة الحساب: الهيئة المصرية</b><span>والعصر على مذهب الشافعي</span></span>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="seclbl">وضع رمضان</div>
+      <div class="row">
+        <span class="ic" style="background:var(--gold-soft);color:var(--gold-ink)">${ic('moon')}</span>
+        <span class="main"><b>يبدأ تلقائيًا في رمضان</b>
+          <span>ينتقل التذكير إلى ما بعد التراويح، ولا تذكير في ساعات الصيام</span></span>
+        <span class="sw on"></span>
+      </div>
+    </div>
+    <div class="sec" style="padding-bottom:18px">
+      <div style="padding:14px 15px;background:var(--inset);border-radius:3px;
+           border-inline-start:3px solid var(--verd)">
+        <p style="font-size:13px;line-height:1.7;color:var(--ink-mute)">
+          نواوية لا تطلب إذن الموقع، ولا تتصل بالإنترنت، ولا تجمع عنك شيئًا.
+          أوقات الصلاة تُحسب على جهازك من المدينة التي اخترتها.</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════ ١٣. ورقة القلوب ═══════════════ */
+function screenHearts(){
+  return `
+  ${statusStrip(0)}
+  <div class="scroll" style="opacity:.45;pointer-events:none">
+    <div class="unwan" style="--uc:var(--band-1)">
+      <div class="unwan-row"><span class="cartouche">${AR(1)}</span>
+      <span><h2>أصولُ الإسلامِ والنيَّة</h2><div class="meta">الأحاديث ١–٧</div></span></div></div>
+    <div class="isnad"><div class="link"><span class="seal now"><span>${AR(4)}</span></span>
+      <span class="gloss"><span class="t naskh">خلق الإنسان وأطوار خلقه</span><span class="lead"></span></span></div></div>
+  </div>
+  <div class="sheet">
+    <div class="sheetbody">
+      <span style="display:inline-block;margin-bottom:4px">${lamp(false,66)}</span>
+      <div class="rhead naskh" style="font-size:25px;margin-bottom:7px">نفدت قلوبك</div>
+      <p style="font-size:14px;line-height:1.7;color:var(--ink-mute);margin-bottom:6px">
+        يعود قلب كل نصف ساعة. الأوّل بعد ${AR(18)} دقيقة.</p>
+      <p style="font-size:13px;line-height:1.7;color:var(--ink-mute);margin-bottom:18px">
+        والمراجعة مفتوحة لك الآن بلا قلوب — وقراءة المتن لا تُغلق أبدًا.</p>
+      <button class="btn gold" style="margin-bottom:9px">${ic('cycle')}راجِع بلا قلوب</button>
+      <button class="btn quiet" style="margin-bottom:9px">${ic('book')}اقرأ الحديث الرابع</button>
+      <button class="btn quiet" style="border:0;color:var(--ink-mute)">أُغلق</button>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════ ١٤. الترحيب ═══════════════ */
+function screenOnboard(){
+  return `
+  <div class="onb">
+    <span style="margin-bottom:18px">${lamp(true,112)}</span>
+    <h1 class="h1" style="font-size:30px;margin-bottom:12px">أربعون حديثًا، وعشر دقائق في اليوم</h1>
+    <p style="font-size:15px;line-height:1.85;color:var(--ink-mute);max-width:310px;margin-bottom:8px">
+      تسمع الحديث بصوت قارئ، وتفهم مفرداته، ثم يسألك التطبيق عنه بعد أيام —
+      في الوقت الذي يكاد عقلك ينساه فيه. هكذا يثبت الحفظ.</p>
+    <div style="display:flex;flex-direction:column;gap:11px;width:100%;margin-top:22px;text-align:start">
+      ${[['lampmark','بلا إنترنت أبدًا','يعمل كاملًا في وضع الطيران'],
+         ['person','بلا حساب ولا تسجيل','تقدّمك على جهازك وحده'],
+         ['quill','بلا إعلانات ولا تتبّع','لا نجمع عنك شيئًا، ولا نبيع شيئًا']]
+        .map(([i,t,s])=>`<div style="display:flex;gap:11px;align-items:flex-start">
+          <span class="ic" style="flex:none;width:34px;height:34px;display:grid;place-items:center;
+            border-radius:3px;background:var(--verd-soft);color:var(--verd)">${ic(i)}</span>
+          <span><b style="display:block;font-size:14.5px;font-weight:600">${t}</b>
+          <span style="display:block;font-size:12.5px;color:var(--ink-mute);margin-top:2px">${s}</span></span>
+        </div>`).join('')}
+    </div>
+  </div>
+  <div class="foot" style="border-top:1px solid var(--rule)">
+    <button class="btn" style="margin-bottom:9px">ابدأ بالحديث الأول</button>
+    <p style="font-size:11.5px;line-height:1.6;color:var(--ink-mute);text-align:center">
+      نواوية وسيلة للحفظ والمراجعة، وليست مرجعًا للفتوى.</p>
+  </div>`;
+}
+
+/* ═══════════════ ١٥. الإشعارات ═══════════════ */
+function screenNotifs(){
+  const N=[
+    {t:"٨:٤٥ م",m:`حديثك لليوم: «<span class="naskh">الدين النصيحة</span>» — دقيقتان.`},
+    {t:"٩:١٠ م",m:`سلسلتك ${AR(7)} أيام. تُكملها الليلة؟`},
+    {t:"٨:٤٥ م",m:`خمسة أحاديث حان وقت مراجعتها. ابدأ بالأقرب للنسيان.`},
+    {t:"أمس",m:`فاتك يوم — والسلسلة محفوظة بتجميدة. نُكمل من الحديث ${AR(12)}؟`},
+    {t:"الجمعة",m:`جمعة مباركة. حديث اليوم عن فضل الصلاة على النبي ﷺ.`},
+    {t:"٩:٠٠ م",m:`أتممتَ الوحدة الأولى. مصباحها مُضاء في حسابك ✨`},
+  ];
+  return `
+  <div class="lessontop"><span class="x">${ic('x')}</span>
+    <span style="flex:1"><b style="font-size:17px;font-weight:600">نبرة التذكير</b>
+    <span style="display:block;font-size:11.5px;color:var(--ink-mute)">نماذج من ${AR(36)} نصًّا تدور بلا تكرار</span></span></div>
+  <div class="scroll">
+    <div class="sec" style="padding-top:14px">
+      ${N.map(n=>`
+      <div class="notif">
+        <span class="app">${ic('lampmark')}</span>
+        <span class="nb">
+          <span class="nt">نواوية <span style="font-weight:400">· ${n.t}</span></span>
+          <span class="nm">${n.m}</span>
+        </span>
+      </div>`).join('')}
+      <div style="margin-top:14px;padding:14px 15px;background:var(--inset);border-radius:3px;
+           border-inline-start:3px solid var(--verm)">
+        <div class="qkind" style="margin-bottom:7px">القاعدة</div>
+        <p style="font-size:13px;line-height:1.75;color:var(--ink-mute)">
+          تذكير واحد في اليوم بأقصى حال. ولا يُعاد نصّ قبل أربعة عشر يومًا.
+          وبعد سبعة تذكيرات متتالية بلا فتح، يُرسَل نصٌّ أخير صريح ثم يتوقّف التذكير حتى تعود.
+          ولا لوم ولا تأنيب في أي نصّ.</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ═══ البناء ═══ */
+const SCREENS=[
+  ["١","الطريق — سلسلة الإسناد وعُنوان الوحدة",screenPath,0],
+  ["٢","الطريق — ليلًا (نِيل وذَهَب)",screenPath,1],
+  ["٣","القارئ — تلاوة بشرية وتظليل كلمة بكلمة",screenReader,0],
+  ["٤","القارئ — ليلًا",screenReader,1],
+  ["٥","الدرس — أكمِل المتن",screenLessonAsk,0],
+  ["٦","الدرس — صواب",screenLessonOk,0],
+  ["٧","الدرس — خطأ",screenLessonNo,0],
+  ["٨","الدرس — ترتيب المقاطع",screenLessonOrder,0],
+  ["٩","نتيجة الدرس",screenResult,0],
+  ["١٠","إتمام الوحدة — إضاءة المصباح",screenUnitDone,1],
+  ["١١","المراجعة",screenReview,0],
+  ["١٢","الفهرس والبحث",screenIndex,0],
+  ["١٣","حسابي — خريطة الحفظ والمصابيح",screenProfile,0],
+  ["١٤","الإعدادات — التذكير وأوقات الصلاة",screenSettings,0],
+  ["١٥","نفاد القلوب — المخرج دائمًا مفتوح",screenHearts,0],
+  ["١٦","الترحيب",screenOnboard,0],
+  ["١٧","نبرة الإشعارات",screenNotifs,1],
+];
+const wall=document.getElementById('wall');
+for(const [num,cap,fn,dk] of SCREENS){
+  const fig=el(`<figure class="slot"><figcaption><b>${num}</b><span>${cap}</span></figcaption>
+    <div class="phone ${dk?'dk':''}"></div></figure>`);
+  fig.querySelector('.phone').innerHTML=fn();
+  wall.appendChild(fig);
+}
+</script>
+</body>
+</html>

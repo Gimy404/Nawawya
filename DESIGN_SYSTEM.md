@@ -1,73 +1,146 @@
-# DESIGN_SYSTEM.md — Nawawia Design System
+# DESIGN_SYSTEM.md — نظام «المَشكاة»
 
-## 1. Design Direction
-Material 3 structure combined with tactile Duolingo-grade pressable surfaces and paper-and-ink reverence.
-- **Lip**: Solid 4dp/6dp offset lip with zero blur on `ChunkyButton`. On press, content translates by lip depth over 120ms `EaseOut` and the lip collapses to 0dp without layout shifts.
-- **Tonal Elevation**: Material Design 3 surface elevation everywhere else. Zero arbitrary box shadows, zero glassmorphism, zero gradients, zero neumorphism.
-- **Typography Separation**:
-  - `Baloo Bhaijaan 2`: Display headers, unit banners, and button labels. Never below 15sp, never for body paragraphs or matn.
-  - `Readex Pro`: Body copy, explanations, secondary meta, and numerals.
-  - `Noto Naskh Arabic`: Reserved strictly and exclusively for sacred text (matn), narrator, and takhrīj lines.
+> الاتجاه وأسبابه في `docs/02-DESIGN-DIRECTION.md`. هذا الملف هو المرجع التنفيذي:
+> الرموز وقيمها ومواضعها في الكود.
+>
+> كل شاشة في هذا النظام بُنيت في نموذج تفاعلي وصُوِّرت ورُوجعت بالعين قبل كتابة
+> سطر Compose واحد — `docs/prototype/index.html` (افتحه في المتصفّح)،
+> واللقطات في `docs/prototype/screens/`.
 
 ---
 
-## 2. Color Tokens & WCAG 2.1 Contrast Table
+## ١. الاتجاه
 
-Tokens are defined in `app/src/main/java/com/nawawia/ui/theme/Color.kt` and tested against WCAG 2.1 relative luminance in `ColorContrastTest.kt`. Dynamic Color is disabled to ensure brand consistency across all Android devices.
+اللون والشكل مأخوذان من **أصباغ وبنية المخطوط الإسلامي**، لا من لوحة Material ولا
+من قوالب تطبيقات اللغات. ولكل عنصر تراثي **وظيفة واجهة**، لا زخرفة:
 
-### Contrast Verification Table (from `ColorContrastTest`)
+| عنصر المخطوط | وظيفته في الواجهة |
+|---|---|
+| التَّرقيم بالحِبر الأحمر | الأحمر يعني «رقم أو مرجع أو تخريج» في كل الشاشات — ولا يُستعمل للتزيين |
+| الحاشية في الهامش | عنوان الحديث في هامش الطريق، ومعاني المفردات في هامش القارئ |
+| العُنوان المُذهَّب | فاتحة الوحدة |
+| الخاتم / الشمسة | عقدة الحديث، ونجمة النتيجة |
+| كتلة المتن الموزونة | المتن كتلة مسطورة بهامش ذهبي، **لا بطاقة** |
 
-| Scheme | Pair | Category | Token Hexes | Ratio | WCAG Min | Result |
-|---|---|---|---|---|---|---|
-| Light | ink on bg | Body text | `#14201B` on `#FBF9F4` | 15.94:1 | ≥ 4.5:1 | **PASS** |
-| Light | ink on surface | Body text | `#14201B` on `#FFFFFF` | 16.77:1 | ≥ 4.5:1 | **PASS** |
-| Light | inkMuted on bg | Secondary text | `#55655C` on `#FBF9F4` | 5.87:1 | ≥ 4.5:1 | **PASS** |
-| Light | inkMuted on surface | Secondary text | `#55655C` on `#FFFFFF` | 6.17:1 | ≥ 4.5:1 | **PASS** |
-| Light | onBrand on brand | Button label | `#FFFFFF` on `#12805C` | 4.92:1 | ≥ 4.5:1 | **PASS** |
-| Light | onGold on gold | Button label | `#1A1407` on `#F2B93B` | 10.27:1 | ≥ 4.5:1 | **PASS** |
-| Light | onWrong on wrong | Button label | `#FFFFFF` on `#C3261C` | 5.81:1 | ≥ 4.5:1 | **PASS** |
-| Light | brand on bg | UI component / icon | `#12805C` on `#FBF9F4` | 4.68:1 | ≥ 3.0:1 | **PASS** |
-| Light | wrong on bg | UI component / icon | `#C3261C` on `#FBF9F4` | 5.52:1 | ≥ 3.0:1 | **PASS** |
-| Light | info on bg | UI component / icon | `#0B6E7A` on `#FBF9F4` | 5.66:1 | ≥ 3.0:1 | **PASS** |
-| Dark | ink on bg | Body text | `#ECF3EE` on `#0D1411` | 16.55:1 | ≥ 4.5:1 | **PASS** |
-| Dark | ink on surface | Body text | `#ECF3EE` on `#151F1A` | 14.98:1 | ≥ 4.5:1 | **PASS** |
-| Dark | inkMuted on bg | Secondary text | `#9CAFA5` on `#0D1411` | 8.08:1 | ≥ 4.5:1 | **PASS** |
-| Dark | inkMuted on surface | Secondary text | `#9CAFA5` on `#151F1A` | 7.31:1 | ≥ 4.5:1 | **PASS** |
-| Dark | onBrand on brand | Button label | `#06251A` on `#3BD68E` (Role flip) | 8.70:1 | ≥ 4.5:1 | **PASS** |
-| Dark | onGold on gold | Button label | `#221A06` on `#F7C85A` | 10.97:1 | ≥ 4.5:1 | **PASS** |
-| Dark | onWrong on wrong | Button label | `#2A0C09` on `#FF7066` (Role flip) | 6.72:1 | ≥ 4.5:1 | **PASS** |
-| Dark | brand on bg | UI component / icon | `#3BD68E` on `#0D1411` | 9.95:1 | ≥ 3.0:1 | **PASS** |
-| Dark | wrong on bg | UI component / icon | `#FF7066` on `#0D1411` | 6.90:1 | ≥ 3.0:1 | **PASS** |
-| Dark | info on bg | UI component / icon | `#4FC3D1` on `#0D1411` | 8.94:1 | ≥ 3.0:1 | **PASS** |
+**وما نتجنّبه عمدًا:** لا بطاقات متماثلة الاستدارة والظلّ لكل شيء، ولا تدرّجات
+لونية زخرفية، ولا ظلال ضبابية، ولا سلاسل ميتا بنقطة وسطية، ولا سهم `→` في نصّ زِرّ.
 
 ---
 
-## 3. Typography Scale
+## ٢. اللون — `ui/theme/Color.kt`
 
-All sizes are specified in `sp` and tested to adapt cleanly at system font scale 2.0 without clipping or truncation.
+Dynamic Color مُعطَّل عمدًا: الهوية ثابتة على كل جهاز.
 
-| Role | Family | Size / Line Height | Primary Use |
+| الرمز | الصبغة | الوظيفة الوحيدة | نهاري | ليلي |
+|---|---|---|---|---|
+| `brand` | لازَوَرْد | الهوية، والفعل الرئيس، والعقدة النشطة | `#1B3C86` | `#5B8AE6` |
+| `gold` | ذَهَب | الإتقان والمكافأة | `#D9A43C` | `#E3B45A` |
+| `goldInk` | ذهب داكن | **نصّ** ذهبي صغير (≥4.5:1) | `#8A5F12` | `#E3B45A` |
+| `rubric` / `wrong` | زِنْجَفْر | حِبر الترقيم والتخريج، والخطأ | `#B33018` | `#F2715A` |
+| `correct` | زَنْجار | **الصواب وحده** — لا يحمل هوية | `#1C6F4C` | `#49C68C` |
+| `ink` | حِبر العَفْص | كل النصوص (بنّي داكن، لا أسود محايد) | `#241E16` | `#F0EBE0` |
+| `bg` | رَق / نِيل | الخلفية | `#F3F1EA` | `#0D1328` |
+
+**القرار الجوهري:** الأخضر كان لون الهوية، وهو لون كل تطبيق قرآن وحديث في المتجر.
+نُقل إلى وظيفته الواحدة «إجابة صحيحة»، وصارت الهوية لازَوَرْد وذهبًا.
+
+**وألوان الوحدات الست** (`unitTints` / `unitBands`) صارت تُستعمل فعلًا: كان
+`UnitColorRole` مُعرَّفًا بستّ قيم ومُسنَدًا لكل وحدة، **ولا يُقرأ في الواجهة ولا مرة**.
+
+### التباين — مُتحقَّق منه عدديًا، ٣٢ زوجًا بلا استثناء
+
+| النوع | أدنى نسبة وُجدت | المطلوب |
+|---|---|---|
+| نصّ أساسي (نهاري/ليلي) | ١٤.٦٠ / ١٤.٣١ | ≥ ٤.٥ |
+| نصّ ثانوي | ٥.٤٢ / ٦.٧٨ | ≥ ٤.٥ |
+| نصّ على زِرّ | ٦.١٣ / ٥.٥٩ | ≥ ٤.٥ |
+| أيقونة/عنصر | ٥.٢٧ / ٥.٤٥ | ≥ ٣.٠ |
+| أبيض على شريط الوحدة (٦ ألوان) | ٦.٨٤ | ≥ ٤.٥ |
+| لون الوحدة على الخلفية (٦×٢) | ٤.٩٩ | ≥ ٣.٠ |
+
+> ⚠️ `gold` **سطح وليس نصًّا** في الوضع النهاري (١.٩٩:١ على الخلفية). النصّ الذهبي
+> الصغير يستعمل `goldInk` دائمًا.
+
+---
+
+## ٣. الخط — `ui/theme/Type.kt`
+
+عائلتان، والقاعدة بينهما **معنى لا ذوق**:
+
+| الخط | يُستعمل لـ |
+|---|---|
+| **Amiri** (إحياء نسخ بولاق ١٩٠٥، SIL OFL) | كل ما هو **من التراث**: المتن، الراوي، التخريج، عناوين الأحاديث والوحدات، أرقام الأحاديث |
+| **Readex Pro** (سانس عربي أولًا، SIL OFL) | كل ما هو **كلام التطبيق**: الأزرار، التسميات، الإحصاءات |
+
+فالمستخدم يعرف **من شكل الحرف وحده** متى يقرأ كلام النبوة ومتى يقرأ كلام البرنامج.
+
+> ### ⚠️ تصحيح جوهري لما كان مكتوبًا هنا
+> كان هذا الملف يصف نظام خطوط من ثلاث عائلات (`Baloo Bhaijaan 2`، `Readex Pro`،
+> `Noto Naskh Arabic`). وبفحص ملفات `res/font/` تبيّن أن **الثلاثة مقتطعة على
+> اللاتينية، بصفر حرف عربي**. فكان كل حرف عربي في التطبيق — بما فيه متن الحديث —
+> يُرسم بخط النظام الافتراضي. النظام الموصوف هنا **لم يكن يظهر على الشاشة أصلًا**.
+>
+> والخطوط الحالية مُتحقَّق من تغطيتها فعليًا: Amiri فيه ٢٥٥ حرفًا عربيًا، وحركات
+> التشكيل الثماني كاملة، ورمز ﷺ، والأرقام العربية الهندية؛ وReadex Pro فيه ٧٣
+> حرفًا عربيًا والتشكيل والأرقام الهندية. ومعهما جدولا `GSUB`/`GPOS` للتشكيل
+> والوصل. وReadex Pro أُخرج إلى أوزان ثابتة لأن `minSdk = 24` والخطوط المتغيّرة
+> لا تُدعم قبل API 26.
+
+| الدور | الخط | الحجم / ارتفاع السطر | الاستعمال |
 |---|---|---|---|
-| `displayLarge` | Baloo Bhaijaan 2 ExtraBold | 36sp / 44sp | Result scores, hero numbers |
-| `headlineLarge` | Baloo Bhaijaan 2 Bold | 28sp / 36sp | Screen top titles |
-| `headlineMedium` | Baloo Bhaijaan 2 Bold | 24sp / 32sp | Unit banners |
-| `titleLarge` | Baloo Bhaijaan 2 Bold | 20sp / 28sp | Card headers, modal titles |
-| `titleMedium` | Readex Pro SemiBold | 17sp / 24sp | Subheaders, list item headers |
-| `bodyLarge` | Readex Pro Regular | 16sp / 26sp | Primary body text |
-| `bodyMedium` | Readex Pro Regular | 14sp / 22sp | Secondary descriptions, captions |
-| `labelLarge` | Baloo Bhaijaan 2 Bold | 15sp / 20sp | ChunkyButton labels |
-| `labelMedium` | Readex Pro Medium | 12sp / 16sp | Badges, chips, metadata tags |
-| `matn` | Noto Naskh Arabic Regular | 20sp / 40sp | Hadith sacred text (2.0x leading for tashkeel) |
-| `matnLarge` | Noto Naskh Arabic Regular | 24sp / 48sp | Large-text reader setting |
-| `takhrij` | Readex Pro Medium | 13sp / 20sp | Hadith source line (`inkMuted`) |
+| `displayLarge` | Amiri Bold | 34 / 46 | أرقام النتيجة |
+| `headlineLarge` | Amiri Bold | 28 / 40 | عناوين الشاشات |
+| `headlineMedium` | Amiri Bold | 23 / 34 | عناوين الوحدات |
+| `titleLarge` | Amiri Bold | 20 / 30 | عناوين الأحاديث |
+| `titleMedium` | Readex SemiBold | 17 / 25 | عناوين فرعية |
+| `bodyLarge` | Readex Regular | 16 / 27 | النصّ الأساسي |
+| `bodyMedium` | Readex Regular | 14 / 23 | وصف ثانوي |
+| `labelLarge` | Readex SemiBold | 16 / 22 | نصوص الأزرار |
+| `labelMedium` | Readex Medium | 12 / 17 | شارات وبيانات |
+| **`matn`** | **Amiri Regular** | **22 / 44** | **المتن — لا يُرسم بغيره** |
+| `matnLarge` | Amiri Regular | 27 / 54 | إعداد تكبير المتن |
+| `narrator` | Amiri Regular | 17 / 32 | سطر الراوي |
+| `takhrij` | Amiri Regular | 15 / 24 | التخريج — بـ `rubric` |
+| `rubricNumeral` | Amiri Bold | 25 / 28 | رقم الحديث في الخاتم |
+
+**لماذا ٢٢sp للمتن:** أكثر شكوى متكرّرة في مراجعات تطبيقات الأحاديث هي «الخط صغير»
+و«لا يوجد تكبير» و«النص باهت». وارتفاع السطر ضِعف الحجم لتأخذ الحركات مداها فوق
+الحرف وتحته دون تداخل.
 
 ---
 
-## 4. Motion Curves & Durations
+## ٤. الشكل: الهندسة تحمل المعنى
 
-Defined in `app/src/main/java/com/nawawia/ui/theme/Motion.kt`:
-- `EaseOut` = CubicBezierEasing(0.23f, 1f, 0.32f, 1f) — Standard UI feedback
-- `EaseInOut` = CubicBezierEasing(0.77f, 0f, 0.175f, 1f) — Screen transitions
-- `EaseSheet` = CubicBezierEasing(0.32f, 0.72f, 0f, 1f) — Bottom sheets
-- `SpringPlay` = spring(dampingRatio = 0.62f, stiffness = Spring.StiffnessMediumLow) — Delight celebrations
-- `LocalReduceMotion`: Reads system `ANIMATOR_DURATION_SCALE` or settings toggle. If `0f`, transforms become 0ms instant updates or 100ms subtle crossfades.
+العيب الأكبر في النسخة السابقة أن كل شيء كان `RoundedCornerShape(20.dp)` +
+`border(2.dp)`: بطاقة الترحيب، وشريط الوحدة، وبطاقة الحديث، وبطاقة الإحصاءات،
+وبطاقة الوسام، وبطاقة وضع المراجعة. إيقاع واحد، بلا تفاوت أهمية.
+
+| العنصر | هندسته | لماذا |
+|---|---|---|
+| الخاتم (عقدة حديث) | دائرة ٧٠dp + حافة سفلية صلبة ٤dp | ختم يُضغط، لا فقاعة لعبة |
+| حلقة التقدّم | قوس ذهبي ٨٤dp | التقدّم نحو الإتقان |
+| العُنوان (فاتحة وحدة) | شريط ٣dp استدارة + شبكة گِرِه + إطار ذهبي داخلي | فاتحة باب في مخطوط |
+| كتلة المتن | استدارة ٣dp + هامش ذهبي ٣dp على جانب البدء | المتن مُفرد عن حواشيه |
+| الأزرار | استدارة ٦dp + حافة سفلية صلبة | لا استدارة ١٦dp «الحلوى» |
+| شريط الحالة | خطّ فاصل رفيع، بلا إطار | معلومة لا بطاقة |
+
+---
+
+## ٥. الحركة — `ui/theme/Motion.kt`
+
+- `EaseOut` = `CubicBezier(0.23, 1, 0.32, 1)` — استجابة اللمس
+- `EaseInOut` = `CubicBezier(0.77, 0, 0.175, 1)` — انتقال الشاشات
+- `EaseSheet` = `CubicBezier(0.32, 0.72, 0, 1)` — الأوراق السفلية
+- `SpringPlay` = `spring(dampingRatio = 0.62)` — لحظات الاحتفال
+- `LocalReduceMotion` — عند `0f` تصير التحوّلات تغييرًا فوريًا أو تلاشيًا خفيفًا
+
+**القاعدة:** الحركة تُجيب فعل المستخدم. والشاشة لا تتحرّك من تلقاء نفسها.
+واللحظة الوحيدة المسموح لها بالبذخ: **إضاءة مصباح الوحدة** عند إتمامها.
+
+---
+
+## ٦. المَشكاة — الرفيق غير المُصوَّر
+
+تطبيقات اللغات تعتمد شخصية ناطقة. وهنا **لا يجوز** رسم نبيّ ولا صحابيّ ولا إجراء
+كلام على ألسنتهم. فالرفيق **مصباح**: بلا وجه، يُضاء عند إتمام الوحدة، ويعطي الأثر
+العاطفي نفسه بلا محذور. (`MishkahLamp` في `ui/components/PathComponents.kt`.)

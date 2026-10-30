@@ -34,12 +34,25 @@ import com.nawawia.domain.model.StreakState
 import com.nawawia.domain.security.LinkGuard
 import com.nawawia.domain.srs.Sm2Scheduler
 import com.nawawia.domain.text.ArabicNormalizer
+import com.nawawia.domain.voice.NawawiaVoice
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+
+/**
+ * عتبة الإتقان. كانت ثلاث عتبات متضاربة (٦٠ و٨٠ و<٨٠) في خمسة مواضع، فكان الحديث
+ * عند ٦٥٪ يُحسب «منجزًا» في شريط الوحدة وعقدته تقول «قيد التعلم» في الوقت نفسه.
+ */
+object Mastery {
+    /** عقدة متقَنة، ووحدة مكتملة، ووسام. رقم واحد في كل التطبيق. */
+    const val MASTERED = 80
+
+    /** بدأ فعلًا — يفتح ما بعده. */
+    const val STARTED = 1
+}
 
 enum class BottomNavTab(val titleAr: String, val testTag: String) {
     PATH("الطريق", "nav_tab_path"),
@@ -76,6 +89,21 @@ data class ActiveLessonUiState(
     val hadithTitleAr: String,
     val seed: Long,
     val questions: List<Question>,
+    /**
+     * عدد الأسئلة الأصلية قبل إعادة إدراج المُخطَأ فيها.
+     * بدونه يكبر المقام عند كل خطأ فيتقهقر شريط التقدّم أمام المستخدم.
+     */
+    val plannedQuestionCount: Int = 0,
+    /** الأسئلة التي ضُبطت نهائيًا — أساس التقدّم، فلا يرجع للخلف أبدًا. */
+    val solvedQuestionIds: Set<String> = emptySet(),
+    /** أخطاء المطابقة في سؤال «صِل العبارات» الجاري. */
+    val matchMistakes: Int = 0,
+    /** كل حديث مرّ في هذه الجلسة — تُحدَّث جدولة مراجعته كلها لا الأول فقط. */
+    val answeredHadithIds: Set<String> = emptySet(),
+    /** ما أُخطئ فيه منها — يأخذ درجة أدنى في SM-2. */
+    val missedHadithIds: Set<String> = emptySet(),
+    /** بدء الجلسة فعليًا — الزمن يُقاس ولا يُفترض. */
+    val startedAtEpochMillis: Long = 0L,
     val currentIndex: Int = 0,
     val selectedOptionId: String? = null,
     val currentPhraseOrder: List<String> = emptyList(),
@@ -95,8 +123,13 @@ data class ActiveLessonUiState(
     val currentQuestion: Question?
         get() = questions.getOrNull(currentIndex)
 
+    /** تقدّم رتيب لا يتقهقر: ما ضُبط من الأسئلة الأصلية. */
     val progressFraction: Float
-        get() = if (questions.isEmpty()) 0f else ((currentIndex + 1).toFloat() / questions.size.toFloat()).coerceIn(0f, 1f)
+        get() {
+            val total = if (plannedQuestionCount > 0) plannedQuestionCount else questions.size
+            if (total == 0) return 0f
+            return (solvedQuestionIds.size.toFloat() / total.toFloat()).coerceIn(0f, 1f)
+        }
 
     val canCheckAnswer: Boolean
         get() {
@@ -167,13 +200,13 @@ data class AppUiState(
     fun getNodeStatus(hadith: Hadith): NodeStatus {
         val progress = progressByHadithId[hadith.id]
         val mastery = progress?.masteryPct ?: 0
-        if (mastery >= 80) return NodeStatus.MASTERED
-        if (mastery > 0) return NodeStatus.IN_PROGRESS
+        if (mastery >= Mastery.MASTERED) return NodeStatus.MASTERED
+        if (mastery >= Mastery.STARTED) return NodeStatus.IN_PROGRESS
 
         if (hadith.number == 1) return NodeStatus.AVAILABLE
         val prevHadithId = "h${hadith.number - 1}"
         val prevMastery = progressByHadithId[prevHadithId]?.masteryPct ?: 0
-        return if (prevMastery > 0) NodeStatus.AVAILABLE else NodeStatus.LOCKED
+        return if (prevMastery >= Mastery.STARTED) NodeStatus.AVAILABLE else NodeStatus.LOCKED
     }
 
     /**
@@ -186,11 +219,11 @@ data class AppUiState(
         }
 
     val masteredHadithCount: Int
-        get() = hadiths.count { (progressByHadithId[it.id]?.masteryPct ?: 0) >= 60 }
+        get() = hadiths.count { (progressByHadithId[it.id]?.masteryPct ?: 0) >= Mastery.MASTERED }
 
     val completedUnitsCount: Int
         get() = units.count { unit ->
-            unit.hadithIds.all { hId -> (progressByHadithId[hId]?.masteryPct ?: 0) >= 60 }
+            unit.hadithIds.all { hId -> (progressByHadithId[hId]?.masteryPct ?: 0) >= Mastery.MASTERED }
         }
 
     val achievements: List<Achievement>
@@ -209,7 +242,7 @@ data class AppUiState(
                 val matchesFilter = when (selectedFilter) {
                     IndexFilter.ALL -> true
                     IndexFilter.BOOKMARKED -> bookmarkedHadithIds.contains(h.id)
-                    IndexFilter.MASTERED -> (progressByHadithId[h.id]?.masteryPct ?: 0) >= 60
+                    IndexFilter.MASTERED -> (progressByHadithId[h.id]?.masteryPct ?: 0) >= Mastery.MASTERED
                     IndexFilter.NOT_STARTED -> (progressByHadithId[h.id]?.masteryPct ?: 0) == 0
                 }
                 val matchesQuery = if (normalizedQuery.isEmpty()) {
@@ -362,6 +395,8 @@ class NawawiaViewModel(
             questions = orderedQuestions,
             currentIndex = safeIdx,
             currentPhraseOrder = initialPhrases,
+            plannedQuestionCount = orderedQuestions.size,
+            startedAtEpochMillis = clock.now().toEpochMilli(),
             correctFirstTryCount = entity.correctFirstTryCount,
             correctAfterRetryCount = entity.correctAfterRetryCount,
             retriesCount = entity.retriesCount,
@@ -395,14 +430,32 @@ class NawawiaViewModel(
         selectTab(BottomNavTab.INDEX)
     }
 
+    /**
+     * القاعدة الأولى في أدب التطبيق: **لا يُحجب متن الحديث بآلية لعب أبدًا.**
+     * فالضغط على عقدة مقفلة يفتح القراءة والاستماع، والمقفل هو الدرس وحده.
+     */
     fun onNodeClick(hadith: Hadith) {
+        val locked = _uiState.value.getNodeStatus(hadith) == NodeStatus.LOCKED
         openReader(hadith.id)
+        if (locked) {
+            val prev = ArabicNormalizer.formatNumber(hadith.number - 1)
+            _uiState.update {
+                it.copy(snackbarMessage = "اقرأه واسمعه الآن. ويُفتح درسه بعد الحديث $prev.")
+            }
+        }
+    }
+
+    /** هل يُسمح ببدء درس هذا الحديث؟ القراءة مسموحة دائمًا. */
+    fun canStartLesson(hadithId: String): Boolean {
+        val state = _uiState.value
+        val hadith = state.hadiths.find { it.id == hadithId } ?: return false
+        return state.getNodeStatus(hadith) != NodeStatus.LOCKED
     }
 
     fun onUnitStartClick(unit: HadithUnit) {
         val state = _uiState.value
         val unitHadiths = state.hadiths.filter { it.unitId == unit.id }
-        val target = unitHadiths.firstOrNull { (state.progressByHadithId[it.id]?.masteryPct ?: 0) < 80 }
+        val target = unitHadiths.firstOrNull { (state.progressByHadithId[it.id]?.masteryPct ?: 0) < Mastery.MASTERED }
             ?: unitHadiths.firstOrNull()
         if (target != null) {
             openReader(target.id)
@@ -411,10 +464,10 @@ class NawawiaViewModel(
 
     fun openReader(hadithId: String) {
         val hadith = _uiState.value.hadiths.find { it.id == hadithId } ?: return
-        val arNum = ArabicNormalizer.formatNumber(hadith.number)
+        // `spokenTextAr` للتظليل كلمةً بكلمة فقط — لا يُنطق آليًّا بحال.
         audioController.loadHadithAudio(
             audioId = hadith.audio.matnId,
-            spokenTextAr = "الحديث $arNum: ${hadith.titleAr}. ${hadith.narratorAr}. ${hadith.matnAr}",
+            spokenTextAr = hadith.matnAr,
             titleAr = hadith.titleAr
         )
         _uiState.update {
@@ -426,14 +479,12 @@ class NawawiaViewModel(
         val currentQ = _uiState.value.activeLesson?.currentQuestion
         val hadith = _uiState.value.hadiths.find { it.id == currentQ?.hadithId }
             ?: _uiState.value.hadiths.firstOrNull()
-        if (hadith != null) {
-            audioController.playPromptAudio(
-                spokenTextAr = "${hadith.narratorAr}. ${hadith.matnAr}",
-                titleAr = hadith.titleAr
-            )
-        } else {
-            audioController.togglePlayPause()
-        }
+            ?: return
+        audioController.playPromptAudio(
+            audioId = hadith.audio.matnId,
+            spokenTextAr = hadith.matnAr,
+            titleAr = hadith.titleAr
+        )
     }
 
     fun closeReader() {
@@ -486,19 +537,23 @@ class NawawiaViewModel(
     fun onOpenSharhUrl(url: String): Boolean {
         return when (val validation = LinkGuard.validate(url)) {
             is AppResult.Success -> {
-                _uiState.update {
-                    it.copy(snackbarMessage = "رابط موثوق: جاري فتح الشرح في الدرر السنية")
-                }
+                // كانت الرسالة تقول «الدرر السنية» لأي رابط مسموح، وهو إخبار غير صحيح.
+                _uiState.update { it.copy(snackbarMessage = NawawiaVoice.openingSharh(hostOf(url))) }
                 true
             }
             is AppResult.Failure -> {
-                _uiState.update {
-                    it.copy(snackbarMessage = "رابط غير موثوق — تم حجبه")
-                }
+                _uiState.update { it.copy(snackbarMessage = NawawiaVoice.Errors.LINK_BLOCKED) }
                 false
             }
         }
     }
+
+    /** اسم مضيف الرابط ليُذكر باسمه في الرسالة. */
+    private fun hostOf(url: String): String =
+        url.substringAfter("://", url)
+            .substringBefore('/')
+            .removePrefix("www.")
+            .ifBlank { "المصدر" }
 
     // ---------------------------------------------------------------------------
     // Lesson & Quiz Engine (All 6 Question Types + Seeded Shuffle)
@@ -533,6 +588,8 @@ class NawawiaViewModel(
             hadithTitleAr = hadith.titleAr,
             seed = seed,
             questions = shuffled,
+            plannedQuestionCount = shuffled.size,
+            startedAtEpochMillis = clock.now().toEpochMilli(),
             currentIndex = 0,
             currentPhraseOrder = initialPhrases,
             isReviewMode = false
@@ -557,27 +614,22 @@ class NawawiaViewModel(
 
         val selectedQuestions: List<Question> = when (mode) {
             ReviewMode.QUICK_10_MIN -> {
-                // 1 question from each of the 42 hadiths
-                state.hadiths.mapNotNull { h ->
-                    state.questionsByHadithId[h.id]?.firstOrNull()
-                }
+                // سؤال من كل حديث، يتغيّر بتغيّر الجلسة. كان `firstOrNull()` ثابتًا
+                // فيحفظ المستخدم موضع الإجابة لا الحديث.
+                state.hadiths.mapNotNull { h -> pickQuestionForReview(state, h.id, seed) }
             }
             ReviewMode.SMART_SRS -> {
                 val dueHadiths = state.hadiths.filter { h ->
                     val srs = state.progressByHadithId[h.id]
                     srs == null || srs.dueEpochDay <= todayEpochDay
                 }.take(10)
-                dueHadiths.mapNotNull { h ->
-                    state.questionsByHadithId[h.id]?.firstOrNull()
-                }
+                dueHadiths.mapNotNull { h -> pickQuestionForReview(state, h.id, seed) }
             }
             ReviewMode.HARDEST_FIRST -> {
                 val hardest = state.hadiths.sortedBy { h ->
                     state.progressByHadithId[h.id]?.masteryPct ?: 0
                 }.take(7)
-                hardest.mapNotNull { h ->
-                    state.questionsByHadithId[h.id]?.firstOrNull()
-                }
+                hardest.mapNotNull { h -> pickQuestionForReview(state, h.id, seed) }
             }
         }
 
@@ -592,6 +644,8 @@ class NawawiaViewModel(
             hadithTitleAr = mode.titleAr,
             seed = seed,
             questions = selectedQuestions,
+            plannedQuestionCount = selectedQuestions.size,
+            startedAtEpochMillis = clock.now().toEpochMilli(),
             currentIndex = 0,
             currentPhraseOrder = initialPhrases,
             isReviewMode = true,
@@ -606,6 +660,14 @@ class NawawiaViewModel(
             )
         }
         persistActiveSessionAsync()
+    }
+
+    /** يختار سؤالًا مختلفًا لكل حديث في كل جلسة مراجعة، وبثبات داخل الجلسة الواحدة. */
+    private fun pickQuestionForReview(state: AppUiState, hadithId: String, seed: Long): Question? {
+        val pool = state.questionsByHadithId[hadithId].orEmpty()
+        if (pool.isEmpty()) return null
+        val offset = ((seed + hadithId.hashCode()).mod(pool.size.toLong())).toInt()
+        return pool[offset]
     }
 
     private fun shufflePhrasesDeterministically(phrases: List<String>, seed: Long): List<String> {
@@ -678,8 +740,11 @@ class NawawiaViewModel(
                     )
                 } else {
                     state.copy(
-                        activeLesson = lesson.copy(selectedRightPairId = pairId, selectedLeftPairId = null),
-                        snackbarMessage = "اختر المعنى المطابق لهذه المفردة من العمود المقابل"
+                        activeLesson = lesson.copy(
+                            selectedRightPairId = pairId,
+                            selectedLeftPairId = null,
+                            matchMistakes = lesson.matchMistakes + 1
+                        )
                     )
                 }
             } else {
@@ -704,8 +769,11 @@ class NawawiaViewModel(
                     )
                 } else {
                     state.copy(
-                        activeLesson = lesson.copy(selectedRightPairId = null, selectedLeftPairId = pairId),
-                        snackbarMessage = "اختر المفردة المطابقة لهذا المعنى من العمود المقابل"
+                        activeLesson = lesson.copy(
+                            selectedRightPairId = null,
+                            selectedLeftPairId = pairId,
+                            matchMistakes = lesson.matchMistakes + 1
+                        )
                     )
                 }
             } else {
@@ -725,7 +793,9 @@ class NawawiaViewModel(
                     lesson.currentPhraseOrder == currentQ.orderedPhrases
                 }
                 QuestionType.MATCH_PAIRS -> {
-                    lesson.matchedPairIds.size == currentQ.matchPairs.size
+                    // كان الحكم «اكتملت المطابقات» وهو شرط تفعيل الزِرّ نفسه،
+                    // فكان السؤال غير قابل للخطأ بحال. الآن تُحتسب المحاولات الخاطئة.
+                    lesson.matchedPairIds.size == currentQ.matchPairs.size && lesson.matchMistakes == 0
                 }
                 else -> {
                     val chosen = currentQ.options.find { it.id == lesson.selectedOptionId }
@@ -742,9 +812,15 @@ class NawawiaViewModel(
                     activeLesson = lesson.copy(
                         isAnswerRevealed = true,
                         isCurrentAnswerCorrect = true,
-                        feedbackTextAr = "صحيح! أحسنت الإجابة",
+                        feedbackTextAr = NawawiaVoice.pick(
+                            NawawiaVoice.correct,
+                            lesson.seed + lesson.currentIndex,
+                            lesson.feedbackTextAr
+                        ),
                         correctFirstTryCount = nextFirstTry,
-                        correctAfterRetryCount = nextRetryCorrect
+                        correctAfterRetryCount = nextRetryCorrect,
+                        solvedQuestionIds = lesson.solvedQuestionIds + currentQ.id,
+                        answeredHadithIds = lesson.answeredHadithIds + currentQ.hadithId
                     )
                 )
             } else {
@@ -757,8 +833,11 @@ class NawawiaViewModel(
                 }
                 val heartsExhausted = penalizeHearts && nextHearts.currentHearts <= 0
 
-                // Re-queue wrong question at the end of the lesson so the learner masters it
-                val updatedQuestions = lesson.questions + currentQ
+                // يُعاد السؤال المُخطَأ فيه إلى آخر الطابور — لكن مرّة واحدة فقط،
+                // وإلا امتدّ الدرس بلا نهاية على من يتكرّر خطؤه.
+                val alreadyRequeued = lesson.retriedQuestionIds.contains(currentQ.id)
+                val updatedQuestions =
+                    if (alreadyRequeued) lesson.questions else lesson.questions + currentQ
 
                 state.copy(
                     heartsState = nextHearts,
@@ -767,9 +846,19 @@ class NawawiaViewModel(
                         questions = updatedQuestions,
                         isAnswerRevealed = true,
                         isCurrentAnswerCorrect = false,
-                        feedbackTextAr = "غير صحيح — راجع الإجابة الصحيحة بالأسفل",
+                        feedbackTextAr = NawawiaVoice.pick(
+                            NawawiaVoice.wrongReassure,
+                            lesson.seed + lesson.currentIndex,
+                            lesson.feedbackTextAr
+                        ),
                         retriesCount = lesson.retriesCount + 1,
-                        retriedQuestionIds = lesson.retriedQuestionIds + currentQ.id
+                        retriedQuestionIds = lesson.retriedQuestionIds + currentQ.id,
+                        answeredHadithIds = lesson.answeredHadithIds + currentQ.hadithId,
+                        missedHadithIds = lesson.missedHadithIds + currentQ.hadithId,
+                        // السؤال المُعاد لا يُحتسب ضُبط إلا إذا كان مُعادًا وضُبط الآن.
+                        solvedQuestionIds =
+                            if (alreadyRequeued) lesson.solvedQuestionIds + currentQ.id
+                            else lesson.solvedQuestionIds
                     )
                 )
             }
@@ -795,10 +884,11 @@ class NawawiaViewModel(
                         selectedOptionId = null,
                         currentPhraseOrder = initialPhrases,
                         selectedRightPairId = null,
+                        selectedLeftPairId = null,
                         matchedPairIds = emptySet(),
+                        matchMistakes = 0,
                         isAnswerRevealed = false,
-                        isCurrentAnswerCorrect = false,
-                        feedbackTextAr = ""
+                        isCurrentAnswerCorrect = false
                     )
                 )
             }
@@ -814,21 +904,38 @@ class NawawiaViewModel(
             val todayEpochDay = StreakEngine.currentEpochDay(clock)
             val updatedStreak = StreakEngine.recordActivity(state.streakState, clock)
 
-            val prevSm2 = state.progressByHadithId[lesson.hadithId] ?: Sm2State(hadithId = lesson.hadithId)
-            val grade = Sm2Scheduler.gradeFromLesson(
-                retriesCount = lesson.retriesCount,
-                heartsExhausted = state.heartsState.currentHearts <= 0
-            )
-            val nextSm2 = Sm2Scheduler.schedule(prevSm2, grade, todayEpochDay)
-            val nextProgressMap = state.progressByHadithId + (lesson.hadithId to nextSm2)
+            // كانت المراجعة تكتب تقدّمها على `lesson.hadithId` وحده — أي على حديث
+            // السؤال الأول — فتُراجَع الأربعون ويُسجَّل الإنجاز على واحد. الآن
+            // يُجدوَل كل حديث مرّ في الجلسة، وبدرجة تخصّه.
+            val touchedHadithIds = lesson.answeredHadithIds.ifEmpty { setOf(lesson.hadithId) }
+            val heartsExhausted = state.heartsState.currentHearts <= 0
+            val nextProgressMap = state.progressByHadithId.toMutableMap().apply {
+                for (hid in touchedHadithIds) {
+                    val prev = get(hid) ?: Sm2State(hadithId = hid)
+                    val missed = lesson.missedHadithIds.contains(hid)
+                    val grade = Sm2Scheduler.gradeFromLesson(
+                        retriesCount = if (missed) lesson.retriesCount.coerceAtLeast(1) else 0,
+                        heartsExhausted = heartsExhausted
+                    )
+                    put(hid, Sm2Scheduler.schedule(prev, grade, todayEpochDay))
+                }
+            }.toMap()
+            val nextSm2 = nextProgressMap[lesson.hadithId] ?: Sm2State(hadithId = lesson.hadithId)
 
             val hadith = state.hadiths.find { it.id == lesson.hadithId }
             val unit = state.units.find { it.id == hadith?.unitId }
             val isUnitDone = unit?.hadithIds?.all { hId ->
-                (nextProgressMap[hId]?.masteryPct ?: 0) >= 60
+                (nextProgressMap[hId]?.masteryPct ?: 0) >= Mastery.MASTERED
             } ?: false
 
-            val nextMinutes = state.totalMinutesSpent + 3
+            // الزمن يُقاس من الساعة، لا يُفترض ٣ دقائق لكل درس مهما طال أو قصر.
+            val elapsedMinutes = if (lesson.startedAtEpochMillis > 0L) {
+                (((clock.now().toEpochMilli() - lesson.startedAtEpochMillis) / 60_000L).toInt())
+                    .coerceIn(1, 60)
+            } else {
+                1
+            }
+            val nextMinutes = state.totalMinutesSpent + elapsedMinutes
             val goalJustReached = state.totalMinutesSpent < state.dailyGoalMinutes && nextMinutes >= state.dailyGoalMinutes
 
             val xpEarned = XpEngine.calculateLessonXp(
@@ -845,7 +952,11 @@ class NawawiaViewModel(
                 state.heartsState
             }
 
-            val totalQuestionsCount = (lesson.correctFirstTryCount + lesson.correctAfterRetryCount).coerceAtLeast(1)
+            // المقام هو عدد أسئلة الدرس، لا عدد الإجابات الصحيحة.
+            val totalQuestionsCount = (
+                if (lesson.plannedQuestionCount > 0) lesson.plannedQuestionCount
+                else lesson.questions.size
+                ).coerceAtLeast(1)
             val scorePct = ((lesson.correctFirstTryCount * 100) / totalQuestionsCount).coerceIn(0, 100)
 
             val nextHadithNumber = (hadith?.number ?: 1) + 1
@@ -860,7 +971,15 @@ class NawawiaViewModel(
                 masteryPct = nextSm2.masteryPct,
                 heartsRemaining = updatedHearts.currentHearts,
                 isUnitCompleted = isUnitDone,
-                encouragementTextAr = if (isUnitDone) "رائع يا بطل! أتممت الوحدة بنجاح" else "أحسنت! خطوة ممتازة في حفظ الأربعين",
+                encouragementTextAr = if (isUnitDone) {
+                    NawawiaVoice.pick(NawawiaVoice.unitDone, lesson.seed)
+                } else {
+                    NawawiaVoice.lessonClosing(
+                        correctFirstTry = lesson.correctFirstTryCount,
+                        totalQuestions = totalQuestionsCount,
+                        seed = lesson.seed
+                    )
+                },
                 nextHadithId = nextHadithId
             )
 

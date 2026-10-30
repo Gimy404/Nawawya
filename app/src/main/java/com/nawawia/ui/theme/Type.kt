@@ -11,108 +11,150 @@ import androidx.compose.ui.unit.sp
 import com.example.R
 
 /**
- * Three bundled Google Fonts families in res/font/:
- * 1. Baloo Bhaijaan 2: Display & UI headings & button labels (chunky, rounded).
- * 2. Readex Pro: Body text, UI, labels, numbers.
- * 3. Noto Naskh Arabic: Matn, narrator, and takhrij lines only.
+ * خطوط نواوية — عائلتان، والقاعدة بينهما **معنى لا ذوق**:
+ *
+ * | الخط | يُستعمل لـ |
+ * |---|---|
+ * | **Amiri** — إحياء نسخ مطبعة بولاق (١٩٠٥) | كل ما هو **من التراث**: المتن، الراوي، التخريج، عناوين الأحاديث والوحدات، وأرقام الأحاديث |
+ * | **Readex Pro** — سانس عربي أولًا | كل ما هو **كلام التطبيق**: الأزرار، التسميات، الإحصاءات |
+ *
+ * فالمستخدم يعرف من شكل الحرف وحده متى يقرأ كلام النبوة ومتى يقرأ كلام البرنامج.
+ *
+ * ⚠️ **ما كان قبل هذا الملف:** كانت `res/font/` تحوي ثلاثة خطوط
+ * (`baloo_bhaijaan_2`, `readex_pro`, `noto_naskh_arabic`) **كلها مقتطعة على
+ * اللاتينية، بصفر حرف عربي**. فكان كل حرف عربي في التطبيق — بما فيه متن الحديث —
+ * يُرسم بخط النظام الافتراضي، لا بالخط المضمّن. ونظام الخطوط الموصوف في
+ * `DESIGN_SYSTEM.md` لم يكن يظهر على الشاشة أصلًا.
+ *
+ * الخطوط الحالية مُتحقَّق من تغطيتها: Amiri فيه ٢٥٥ حرفًا عربيًا وحركات التشكيل
+ * الثماني كاملة ورمز ﷺ؛ وReadex Pro فيه ٧٣ حرفًا عربيًا والأرقام العربية الهندية.
+ * كلاهما بترخيص SIL OFL (نسخة الترخيص في `docs/AMIRI-OFL.txt`).
+ *
+ * وReadex Pro أُخرج إلى أوزان ثابتة من الخط المتغيّر، لأن `minSdk = 24`
+ * والخطوط المتغيّرة لا تُدعم قبل API 26.
  */
-val BalooBhaijaanFontFamily = FontFamily(
-    Font(R.font.baloo_bhaijaan_2, FontWeight.Normal),
-    Font(R.font.baloo_bhaijaan_2, FontWeight.Bold),
-    Font(R.font.baloo_bhaijaan_2, FontWeight.ExtraBold)
+val AmiriFontFamily = FontFamily(
+    Font(R.font.amiri_regular, FontWeight.Normal),
+    Font(R.font.amiri_bold, FontWeight.Bold)
 )
 
 val ReadexProFontFamily = FontFamily(
-    Font(R.font.readex_pro, FontWeight.Normal),
-    Font(R.font.readex_pro, FontWeight.Medium),
-    Font(R.font.readex_pro, FontWeight.SemiBold),
-    Font(R.font.readex_pro, FontWeight.Bold)
+    Font(R.font.readex_pro_regular, FontWeight.Normal),
+    Font(R.font.readex_pro_medium, FontWeight.Medium),
+    Font(R.font.readex_pro_semibold, FontWeight.SemiBold),
+    Font(R.font.readex_pro_bold, FontWeight.Bold)
 )
 
-val NotoNaskhArabicFontFamily = FontFamily(
-    Font(R.font.noto_naskh_arabic, FontWeight.Normal),
-    Font(R.font.noto_naskh_arabic, FontWeight.Bold)
-)
+/**
+ * مُبقاة للتوافق مع أي استدعاء قديم: كل ما كان يطلب خطًا تراثيًا يحصل على Amiri.
+ * (`Baloo Bhaijaan 2` خطّ مدوّر طفولي، لا يناسب محتوى نبويًا، وحُذف.)
+ */
+@Deprecated("استُبدل بـ AmiriFontFamily", ReplaceWith("AmiriFontFamily"))
+val NotoNaskhArabicFontFamily = AmiriFontFamily
 
 val NawawiaMaterialTypography = Typography(
+    // ── من التراث: Amiri ──────────────────────────────────────────────
     displayLarge = TextStyle(
-        fontFamily = BalooBhaijaanFontFamily,
-        fontWeight = FontWeight.ExtraBold,
-        fontSize = 36.sp,
-        lineHeight = 44.sp
+        fontFamily = AmiriFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 34.sp,
+        lineHeight = 46.sp
     ),
     headlineLarge = TextStyle(
-        fontFamily = BalooBhaijaanFontFamily,
+        fontFamily = AmiriFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
-        lineHeight = 36.sp
+        lineHeight = 40.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = BalooBhaijaanFontFamily,
+        fontFamily = AmiriFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
-        lineHeight = 32.sp
+        fontSize = 23.sp,
+        lineHeight = 34.sp
     ),
     titleLarge = TextStyle(
-        fontFamily = BalooBhaijaanFontFamily,
+        fontFamily = AmiriFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
-        lineHeight = 28.sp
+        lineHeight = 30.sp
     ),
+
+    // ── كلام التطبيق: Readex Pro ──────────────────────────────────────
     titleMedium = TextStyle(
         fontFamily = ReadexProFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 17.sp,
-        lineHeight = 24.sp
+        lineHeight = 25.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = ReadexProFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 26.sp
+        lineHeight = 27.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = ReadexProFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 22.sp
+        lineHeight = 23.sp
     ),
     labelLarge = TextStyle(
-        fontFamily = BalooBhaijaanFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 15.sp,
-        lineHeight = 20.sp
+        fontFamily = ReadexProFontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        lineHeight = 22.sp
     ),
     labelMedium = TextStyle(
         fontFamily = ReadexProFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
-        lineHeight = 16.sp
+        lineHeight = 17.sp
     )
 )
 
 /**
- * Custom typography roles set apart for sacred text and citations.
+ * أدوار مخصّصة للنصّ الشرعي وما يتبعه.
+ *
+ * حجم المتن **٢٢sp فأكثر** عمدًا: أكثر شكوى متكرّرة في مراجعات تطبيقات الأحاديث
+ * هي «الخط صغير» و«لا يوجد تكبير» و«النص باهت». وارتفاع السطر ضِعف الحجم لتأخذ
+ * الحركات مداها فوق الحرف وتحته دون تداخل.
  */
 @Immutable
 data class NawawiaCustomTypography(
+    /** المتن — لا يُرسم بغير هذا الدور أبدًا. */
     val matn: TextStyle = TextStyle(
-        fontFamily = NotoNaskhArabicFontFamily,
+        fontFamily = AmiriFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 20.sp,
-        lineHeight = 40.sp
+        fontSize = 22.sp,
+        lineHeight = 44.sp
     ),
+    /** إعداد «تكبير خط المتن». */
     val matnLarge: TextStyle = TextStyle(
-        fontFamily = NotoNaskhArabicFontFamily,
+        fontFamily = AmiriFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
-        lineHeight = 48.sp
+        fontSize = 27.sp,
+        lineHeight = 54.sp
     ),
+    /** سطر الراوي قبل المتن. */
+    val narrator: TextStyle = TextStyle(
+        fontFamily = AmiriFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 17.sp,
+        lineHeight = 32.sp
+    ),
+    /** التخريج — يُرسم بحِبر الترقيم (`colors.rubric`). */
     val takhrij: TextStyle = TextStyle(
-        fontFamily = ReadexProFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 13.sp,
-        lineHeight = 20.sp
+        fontFamily = AmiriFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 15.sp,
+        lineHeight = 24.sp
+    ),
+    /** رقم الحديث داخل الخاتم وفي الفهرس. */
+    val rubricNumeral: TextStyle = TextStyle(
+        fontFamily = AmiriFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 25.sp,
+        lineHeight = 28.sp
     )
 )
 

@@ -36,8 +36,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.nawawia.data.audio.AudioPlayerState
+import com.nawawia.domain.voice.NawawiaVoice
 import com.nawawia.ui.theme.NawawiaTheme
-import com.nawawia.ui.theme.NotoNaskhArabicFontFamily
+import com.nawawia.ui.theme.AmiriFontFamily
 
 /**
  * First-class audio player bar for Listen -> Shadow -> Recall (Section 5.6 #9).
@@ -138,11 +139,13 @@ fun AudioPlayerBar(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         val loopStatusText = when {
+                            !audioState.isAudioFileAvailable ->
+                                NawawiaVoice.Errors.AUDIO_MISSING_TITLE
                             audioState.statusNoticeAr != null -> audioState.statusNoticeAr
-                            audioState.isAbLoopActive -> "تكرار المقطع (أ ⇄ ب) مفعّل"
-                            audioState.pointAFraction != null -> "تم تحديد (أ) — اضغط لتحديد (ب)"
-                            audioState.isPlaying -> "جاري التلاوة الصوتية…"
-                            else -> "اضغط «استمع» لتشغيل التلاوة الصوتية"
+                            audioState.isAbLoopActive -> "يُكرّر ما بين (أ) و(ب)"
+                            audioState.pointAFraction != null -> "حدّدتَ (أ) — اضغط عند (ب)"
+                            audioState.isPlaying -> "قراءة: ${'$'}{audioState.currentTitleAr}"
+                            else -> "اسمع الحديث بصوت القارئ"
                         }
                         Text(
                             text = loopStatusText,
@@ -186,7 +189,7 @@ fun AudioPlayerBar(
                         Text(
                             text = audioState.activeSegmentTextAr,
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                fontFamily = NotoNaskhArabicFontFamily,
+                                fontFamily = AmiriFontFamily,
                                 fontWeight = FontWeight.Bold
                             ),
                             color = colors.ink

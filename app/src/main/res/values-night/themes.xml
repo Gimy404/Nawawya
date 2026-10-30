@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- نِيل: خلفية الإقلاع ليلًا، فلا يومض الأبيض قبل أول رسم. -->
+    <style name="Theme.Nawawia" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/nawawia_indigo</item>
+    </style>
+    <style name="Theme.MyApplication" parent="Theme.Nawawia" />
+</resources>

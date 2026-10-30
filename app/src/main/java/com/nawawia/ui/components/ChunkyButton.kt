@@ -58,8 +58,10 @@ enum class ChunkyButtonVariant {
 }
 
 enum class ChunkyButtonSize(val minHeight: Dp, val lipDepth: Dp, val cornerRadius: Dp) {
-    Medium(minHeight = 48.dp, lipDepth = 4.dp, cornerRadius = 16.dp),
-    Large(minHeight = 56.dp, lipDepth = 6.dp, cornerRadius = 16.dp)
+    /** فقاعة النداء على الخاتم النشط — تبقى فوق ٤٤dp لمس. */
+    Small(minHeight = 44.dp, lipDepth = 3.dp, cornerRadius = 5.dp),
+    Medium(minHeight = 48.dp, lipDepth = 4.dp, cornerRadius = 6.dp),
+    Large(minHeight = 56.dp, lipDepth = 4.dp, cornerRadius = 6.dp)
 }
 
 /**
@@ -88,6 +90,7 @@ fun ChunkyButton(
     val (faceColor, lipColor, textColor) = when (variant) {
         ChunkyButtonVariant.Primary -> Triple(colors.brand, colors.brandPress, colors.onBrand)
         ChunkyButtonVariant.Gold -> Triple(colors.gold, colors.goldPress, colors.onGold)
+        // «صواب» صار له لونه (زَنْجار) بعدما صارت الهوية لازَوَرْد.
         ChunkyButtonVariant.Danger -> Triple(colors.wrong, colors.wrongPress, colors.onWrong)
         ChunkyButtonVariant.Tonal -> Triple(colors.surfaceAlt, colors.outline, colors.ink)
         ChunkyButtonVariant.Ghost -> Triple(Color.Transparent, Color.Transparent, colors.ink)

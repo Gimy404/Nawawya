@@ -44,6 +44,11 @@ android {
   buildTypes {
     release {
       isCrunchPngs = false
+      // ⚠️ الانكماش مُطفأ عمدًا في هذا التسليم.
+      // قواعد R8 اللازمة مكتوبة وجاهزة في `proguard-rules.pro`، لكن تفعيل
+      // الانكماش يحتاج بناء نسخة release وتجربتها على جهاز — وهو ما تعذّر هنا
+      // (لا Android SDK في بيئة العمل). فلا يُقلب هذا المفتاح قبل تلك التجربة.
+      // `SELF_AUDIT.md` بند ٣٥ كان يدّعي أن الانكماش مُطبَّق وهو ليس كذلك.
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       // Do not remove or modify this signingConfig assignment. It is necessary for Android apps in
@@ -58,8 +63,9 @@ android {
   }
   compileOptions {
     isCoreLibraryDesugaringEnabled = true
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    // DECISIONS.md (DEC-002) ينصّ على Java 17، وكان البناء على 11 — وُحِّدا.
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
   }
   buildFeatures {
     compose = true

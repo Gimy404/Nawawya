@@ -74,8 +74,8 @@ fun AnswerChoice(
             "محدّد"
         )
         AnswerChoiceState.CORRECT -> Quintuple(
-            colors.brandSoft,
-            colors.brand,
+            colors.correctSoft,
+            colors.correct,
             colors.ink,
             Icons.Default.CheckCircle,
             "صحيح"
@@ -88,8 +88,8 @@ fun AnswerChoice(
             "غير صحيح"
         )
         AnswerChoiceState.REVEALED_CORRECT -> Quintuple(
-            colors.brandSoft,
-            colors.brand,
+            colors.correctSoft,
+            colors.correct,
             colors.ink,
             Icons.Default.CheckCircle,
             "الإجابة الصحيحة"
@@ -98,9 +98,9 @@ fun AnswerChoice(
 
     val iconTint = when (state) {
         AnswerChoiceState.IDLE -> colors.inkMuted
-        AnswerChoiceState.SELECTED,
+        AnswerChoiceState.SELECTED -> colors.brand
         AnswerChoiceState.CORRECT,
-        AnswerChoiceState.REVEALED_CORRECT -> colors.brand
+        AnswerChoiceState.REVEALED_CORRECT -> colors.correct
         AnswerChoiceState.INCORRECT -> colors.wrong
     }
 
