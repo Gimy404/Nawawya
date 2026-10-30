@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Octagonal Islamic Star Frame in Warm Gold -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M54,22 L63,31 L76,31 L76,44 L85,54 L76,64 L76,77 L63,77 L54,86 L45,77 L32,77 L32,64 L23,54 L32,44 L32,31 L45,31 Z" />
+    <!-- Inner Warm Parchment Book / Manuscript -->
+    <path
+        android:fillColor="#FAF7F0"
+        android:pathData="M38,40 C44,38 50,40 54,43 C58,40 64,38 70,40 L70,66 C64,64 58,66 54,69 C50,66 44,64 38,66 Z" />
+    <!-- Emerald Spine & Script Lines -->
+    <path
+        android:fillColor="#0F6E56"
+        android:pathData="M53,42h2v26h-2zM42,47h8v2h-8zM42,52h8v2h-8zM58,47h8v2h-8zM58,52h8v2h-8z" />
+</vector>

@@ -1,0 +1,6 @@
+{
+  "name": "نواوية",
+  "description": "تطبيق تفاعلي لحفظ وفهم الأربعين النووية للإمام النووي في ١٠ دقائق يوميًا مع التلاوة الصوتية والشرح والاختبارات التفاعلية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

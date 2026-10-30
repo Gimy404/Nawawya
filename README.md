@@ -1,11 +1,44 @@
-<div align="center">
+# نواوية — Nawawia
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+**تطبيق تفاعلي لحفظ ومراجعة الأربعين النووية دون إنترنت**
 
-  <h1>Built with AI Studio</h2>
+تسمع، تراجع، وتُسأل في ١٠ دقائق في اليوم — مبني بالكامل بلغة Kotlin و Jetpack Compose (Material 3) مع التزام صارم بفصل النصوص الشرعية عن عناصر اللعبة، ودعم كامل للعمل دون اتصال بالإنترنت (Airplane Mode).
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+---
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## 1. البنية المعمارية (Architecture)
 
-</div>
+يتبع المشروع معمارية أحادية الوحدة (`ui -> domain -> data`) مع فصل كامل لطبقة القواعد (`domain`) عن مكتبات أندرويد (`Zero android.* imports`):
+
+- **`core/`**:
+  - `AppClock`: واجهة قراءة الوقت الوحيدة في التطبيق لمنع التلاعب بالساعة أو أخطاء التوقيت الصيفي والسفر.
+  - `AppResult` & `AppError`: معالجة الأخطاء دون استثناءات عشوائية عبر الطبقات.
+- **`domain/`**:
+  - `HeartsEngine`: حساب تجدد القلوب (قلب كل ٣٠ دقيقة) تلقائيًا عند القراءة دون مؤقتات خلفية.
+  - `StreakEngine`: حساب سلسلة الأيام المتتالية مع تجميد السلسلة وحماية تراجع الساعة وتغير المناطق الزمنية.
+  - `Sm2Scheduler`: خوارزمية التكرار المتباعد (SM-2) لحساب مواعيد المراجعة ونسبة الإتقان.
+  - `XpEngine` & `AchievementsEngine`: حساب نقاط الخبرة والأوسمة الثمانية.
+  - `LinkGuard`: التحقق الأمني من روابط الشروح الخارجية (HTTPS + قائمة النطاقات العلمية الموثوقة فقط).
+- **`data/`**:
+  - `ContentValidator` & `ContentLoader`: بوابة التحقق السباعية لسلامة المحتوى وبصمة `SHA-256`.
+  - `NawawiaDatabase`: قاعدة بيانات Room لحفظ التقدم، جدول المراجعة، وجلسات الاختبار النشطة مع دعم الترحيل (`MIGRATION_1_2`).
+  - `AudioController`: مشغل الصوت مع التحكم بالسرعة (`0.75x / 1x / 1.25x`)، وتكرار المقطع (`A-B Loop`)، وعدد مرات التكرار (`1 / 3 / 5 / ∞`).
+- **`ui/`**:
+  - نظام التصميم `NawawiaTheme` مع الخطوط المضمّنة محليًا (`Baloo Bhaijaan 2`, `Readex Pro`, `Noto Naskh Arabic`).
+  - شاشات التطبيق الكاملة: `PathScreen` (الطريق)، `HadithReaderScreen` (الحديث)، `LessonScreen` (الدرس بـ ٦ أنماط أسئلة)، `ResultScreen` (النتيجة)، `ReviewScreen` (المراجعة)، `IndexScreen` (الفهرس والبحث)، `ProfileScreen` (حسابي)، `SettingsScreen` (الإعدادات)، و `PassAndPlayScreen` (لعب مع صاحبك).
+
+---
+
+## 2. البناء وتشغيل الاختبارات (Build & Tests)
+
+لتشغيل جميع اختبارات الوحدات واختبارات واجهة المستخدم الآلية (Robolectric + Compose UI Tests):
+
+```bash
+gradle :app:testDebugUnitTest
+```
+
+لتجميع نسخة التطبيق:
+
+```bash
+gradle :app:assembleDebug
+```

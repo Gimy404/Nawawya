@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">نواوية</string>
+    <string name="path_tab">الطريق</string>
+    <string name="review_tab">المراجعة</string>
+    <string name="index_tab">الأحاديث</string>
+    <string name="profile_tab">حسابي</string>
+    <string name="start_learning">ابدأ التعلم</string>
+    <string name="quick_review">المراجعة السريعة</string>
+    <string name="browse_hadiths">تصفح الأحاديث</string>
+</resources>

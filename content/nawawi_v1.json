@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "content_version": "1.0.0-template",
+  "source_edition": "ENTER_VERIFIED_PRINT_EDITION_ATTRIBUTION_HERE",
+  "hadiths": [
+    {
+      "number": 1,
+      "unit": 1,
+      "_example": true,
+      "title_ar": "«‹PLACEHOLDER TITLE FOR HADITH #1 — NOT AUTHENTIC TEXT — DO NOT SHIP›»",
+      "narrator_ar": "«‹PLACEHOLDER NARRATOR — NOT AUTHENTIC TEXT›»",
+      "narrator_bio_ar": "«‹PLACEHOLDER NARRATOR BIO — NOT AUTHENTIC TEXT›»",
+      "matn_ar": "«‹PLACEHOLDER MATN FOR HADITH #1 — NOT AUTHENTIC TEXT — DO NOT SHIP›»",
+      "matn_plain_ar": "«‹PLACEHOLDER MATN PLAIN FOR HADITH #1 — NOT AUTHENTIC TEXT — DO NOT SHIP›»",
+      "takhrij_ar": "«‹PLACEHOLDER TAKHRIJ — NOT AUTHENTIC TEXT›»",
+      "vocabulary": [
+        {
+          "term": "«‹TERM›»",
+          "meaning": "«‹MEANING — NOT AUTHENTIC TEXT›»"
+        }
+      ],
+      "benefits_ar": [
+        "«‹BENEFIT 1 — NOT AUTHENTIC TEXT›»"
+      ],
+      "sharh_summary_ar": "«‹SHARH SUMMARY — NOT AUTHENTIC TEXT›»",
+      "audio_file": "hadith_01.opus",
+      "questions": [
+        {
+          "id": "h01_q01",
+          "type": "MCQ",
+          "prompt_ar": "«‹PLACEHOLDER QUESTION 1 — NOT AUTHENTIC TEXT›»",
+          "choices_ar": ["A", "B", "C", "D"],
+          "correct_index": 0,
+          "explanation_ar": "«‹PLACEHOLDER EXPLANATION — NOT AUTHENTIC TEXT›»"
+        },
+        {
+          "id": "h01_q02",
+          "type": "TRUE_FALSE",
+          "prompt_ar": "«‹PLACEHOLDER QUESTION 2 — NOT AUTHENTIC TEXT›»",
+          "choices_ar": ["صحيح", "خطأ"],
+          "correct_index": 0,
+          "explanation_ar": "«‹PLACEHOLDER EXPLANATION — NOT AUTHENTIC TEXT›»"
+        },
+        {
+          "id": "h01_q03",
+          "type": "FILL_BLANK",
+          "prompt_ar": "«‹PLACEHOLDER QUESTION 3 — NOT AUTHENTIC TEXT›»",
+          "choices_ar": ["A", "B", "C", "D"],
+          "correct_index": 0,
+          "explanation_ar": "«‹PLACEHOLDER EXPLANATION — NOT AUTHENTIC TEXT›»"
+        },
+        {
+          "id": "h01_q04",
+          "type": "ORDER_PHRASES",
+          "prompt_ar": "«‹PLACEHOLDER QUESTION 4 — NOT AUTHENTIC TEXT›»",
+          "choices_ar": ["1", "2", "3"],
+          "correct_order": [0, 1, 2],
+          "explanation_ar": "«‹PLACEHOLDER EXPLANATION — NOT AUTHENTIC TEXT›»"
+        },
+        {
+          "id": "h01_q05",
+          "type": "MATCH_PAIRS",
+          "prompt_ar": "«‹PLACEHOLDER QUESTION 5 — NOT AUTHENTIC TEXT›»",
+          "pairs": [
+            { "left": "L1", "right": "R1" },
+            { "left": "L2", "right": "R2" }
+          ],
+          "explanation_ar": "«‹PLACEHOLDER EXPLANATION — NOT AUTHENTIC TEXT›»"
+        },
+        {
+          "id": "h01_q06",
+          "type": "AUDIO_RECOGNITION",
+          "prompt_ar": "«‹PLACEHOLDER QUESTION 6 — NOT AUTHENTIC TEXT›»",
+          "choices_ar": ["A", "B", "C", "D"],
+          "correct_index": 0,
+          "audio_clip": "hadith_01.opus",
+          "explanation_ar": "«‹PLACEHOLDER EXPLANATION — NOT AUTHENTIC TEXT›»"
+        }
+      ]
+    },
+    { "number": 2, "unit": 1, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_02.opus", "questions": [] },
+    { "number": 3, "unit": 1, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_03.opus", "questions": [] },
+    { "number": 4, "unit": 1, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_04.opus", "questions": [] },
+    { "number": 5, "unit": 1, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_05.opus", "questions": [] },
+    { "number": 6, "unit": 1, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_06.opus", "questions": [] },
+    { "number": 7, "unit": 1, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_07.opus", "questions": [] },
+    { "number": 8, "unit": 2, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_08.opus", "questions": [] },
+    { "number": 9, "unit": 2, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_09.opus", "questions": [] },
+    { "number": 10, "unit": 2, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_10.opus", "questions": [] },
+    { "number": 11, "unit": 2, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_11.opus", "questions": [] },
+    { "number": 12, "unit": 2, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_12.opus", "questions": [] },
+    { "number": 13, "unit": 2, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_13.opus", "questions": [] },
+    { "number": 14, "unit": 2, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_14.opus", "questions": [] },
+    { "number": 15, "unit": 3, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_15.opus", "questions": [] },
+    { "number": 16, "unit": 3, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_16.opus", "questions": [] },
+    { "number": 17, "unit": 3, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_17.opus", "questions": [] },
+    { "number": 18, "unit": 3, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_18.opus", "questions": [] },
+    { "number": 19, "unit": 3, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_19.opus", "questions": [] },
+    { "number": 20, "unit": 3, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_20.opus", "questions": [] },
+    { "number": 21, "unit": 3, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_21.opus", "questions": [] },
+    { "number": 22, "unit": 4, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_22.opus", "questions": [] },
+    { "number": 23, "unit": 4, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_23.opus", "questions": [] },
+    { "number": 24, "unit": 4, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_24.opus", "questions": [] },
+    { "number": 25, "unit": 4, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_25.opus", "questions": [] },
+    { "number": 26, "unit": 4, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_26.opus", "questions": [] },
+    { "number": 27, "unit": 4, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_27.opus", "questions": [] },
+    { "number": 28, "unit": 4, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_28.opus", "questions": [] },
+    { "number": 29, "unit": 5, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_29.opus", "questions": [] },
+    { "number": 30, "unit": 5, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_30.opus", "questions": [] },
+    { "number": 31, "unit": 5, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_31.opus", "questions": [] },
+    { "number": 32, "unit": 5, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_32.opus", "questions": [] },
+    { "number": 33, "unit": 5, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_33.opus", "questions": [] },
+    { "number": 34, "unit": 5, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_34.opus", "questions": [] },
+    { "number": 35, "unit": 5, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_35.opus", "questions": [] },
+    { "number": 36, "unit": 6, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_36.opus", "questions": [] },
+    { "number": 37, "unit": 6, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_37.opus", "questions": [] },
+    { "number": 38, "unit": 6, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_38.opus", "questions": [] },
+    { "number": 39, "unit": 6, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_39.opus", "questions": [] },
+    { "number": 40, "unit": 6, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_40.opus", "questions": [] },
+    { "number": 41, "unit": 6, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_41.opus", "questions": [] },
+    { "number": 42, "unit": 6, "title_ar": "", "narrator_ar": "", "narrator_bio_ar": "", "matn_ar": "", "matn_plain_ar": "", "takhrij_ar": "", "vocabulary": [], "benefits_ar": [], "sharh_summary_ar": "", "audio_file": "hadith_42.opus", "questions": [] }
+  ]
+}
